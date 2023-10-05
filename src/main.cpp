@@ -12,11 +12,11 @@ int ledsToHigh[N_LEDS];
 long r;
 int n = 0;
 int j = N_LEDS - 1;
+int l = 0;
 unsigned long startTime;
 unsigned long timeToPlay = 10000; /* tempo a disposizione del giocatore */
-unsigned long deltaTime; /* tempo da rimuovere ad ogni nuovo livello */
+unsigned long deltaTime = 1000; /* tempo da rimuovere ad ogni nuovo livello */
 int level = 1; /* livello del gioco */
-int clickedButtonCounter; /* contatore dei pulsanti cliccati */
 
 static void wait(unsigned long time) {
     int beginTime = millis();
@@ -37,21 +37,9 @@ static void switchOffAnRandomLed() {
 
 }
 
-static void blinky(int times) {
-    int k = 0;
-    while (k < times) {
-        wait(ONE_SEC / 2);
-        for (int i = 0; i < N_LEDS; i++) {
-            digitalWrite(leds[i], HIGH);
-        }
-        wait(ONE_SEC / 2);
-        for (int i = 0; i < N_LEDS; i++) {
-            digitalWrite(leds[i], LOW);
-        }
-        k++;
-    }
+static void pressButton() {
+    Serial.println("button pressed");
 }
-
 
 void setup() {  
     state = MC;
@@ -69,7 +57,6 @@ void loop() {
     switch (state) {
     case MC:
         Serial.println("state: MC");
-        clickedButtonCounter = 0;
         wait(2000);
         Serial.println("Ho aspettato");
         Serial.print("n: ");
@@ -77,7 +64,7 @@ void loop() {
         
         if (n == N_LEDS) {
             startTime = millis();
-            Serial.print("start time 1:");
+            Serial.print("start time 1: ");
             Serial.println(startTime);
             state = PLAYER;
         } else {
@@ -88,27 +75,58 @@ void loop() {
     case PLAYER:
         Serial.println("state: PLAYER");
         if (millis() - startTime >= timeToPlay ) {
+            l = 0;
             state = LOSE;
         }
-            
+        for (int i = 0; i < N_LEDS; i++) {
+            if (digitalRead(buttons[i]) == HIGH) {
+                if (i == ledsToHigh[l]) {
+                    l++;
+                    Serial.print("l: ");
+                    Serial.println(l);
+                    digitalWrite(leds[i], HIGH);
+                    if (l == N_LEDS) {
+                        state = WIN_LEVEL;
+                    }
+                } else {
+                    state = LOSE;
+                }
+                delay(500);
+            }
+        }
+
         break;
     case LOSE:
         Serial.println("state: LOSE");
-        wait(ONE_SEC / 2);
+        wait(ONE_SEC / 4);
         for (int i = 0; i < N_LEDS; i++) {
             digitalWrite(leds[i], HIGH);
         }
-        wait(ONE_SEC / 2);
+        wait(ONE_SEC / 4);
         for (int i = 0; i < N_LEDS; i++) {
             digitalWrite(leds[i], LOW);
         }
         break;
     case WIN_LEVEL:
+        Serial.println("state: LEVEL PASSED");
         timeToPlay -= deltaTime;
         level++;
+        for (int i = 0; i < N_LEDS; i++)
+        {
+            wait(ONE_SEC / 16);
+            for (int i = 0; i < N_LEDS; i++) {
+                digitalWrite(leds[i], HIGH);
+            }
+            wait(ONE_SEC / 16);
+            for (int i = 0; i < N_LEDS; i++) {
+                digitalWrite(leds[i], LOW);
+            }
+        }
+        
         for (int i = 0; i < N_LEDS; i++) {
             digitalWrite(leds[i], HIGH);
         }
+        n = 0;
         state = MC;
         break;
     default:
