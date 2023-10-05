@@ -37,10 +37,6 @@ static void switchOffAnRandomLed() {
 
 }
 
-static void pressButton() {
-    Serial.println("button pressed");
-}
-
 void setup() {  
     state = MC;
     for (int i = 0; i < N_LEDS; i++) {
