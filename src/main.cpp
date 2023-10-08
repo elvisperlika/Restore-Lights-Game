@@ -24,7 +24,7 @@ int leds[N_LEDS] = {2, 3, 4, 5};
 const int N_LEDS = sizeof(leds) / sizeof(leds[0]);
 
 //Variabili per il controllo della difficoltà del livello (potenziometro)
-const int POT_PIN = 10;
+const int POT_PIN = A0;
 
 //Variabili per il controllo dei bottoni (INPUT)
 int buttons[N_LEDS] = {6, 7, 8, 9};
@@ -128,7 +128,7 @@ void loop() {
                     level = 1;
                     break;
             }
-            timeToPlay = initialTime * Math.Pow((1 - DECRESE_RATE), level++);
+            timeToPlay = initialTime * Math.Pow((1 - DECRESE_RATE), level);
 
             break;
         //Nella fase di Player, verrà rilevata la pressione dei pulsanti e gestita analogamente la logica di gioco
