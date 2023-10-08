@@ -1,133 +1,187 @@
 #include <Arduino.h>
 #include <time.h>
 #include <stdlib.h>
+#include <math.h>
 
-const unsigned long ONE_SEC = 1000;
-const int N_LEDS = 4;
-enum GameState {MC, PLAYER, LOSE, WIN_LEVEL};
+//Identificazione dello stato di gioco corrente
+enum GameState {
+  //Microcontroller (Il sistema stà inizializzando il gioco)
+  MC,
+  //Turno del giocatore
+  PLAYER,
+  //Il giocatore ha perso il gioco
+  LOSE,
+  //Il giocatore ha perso il gioco
+  WIN_LEVEL};
 GameState state = MC;
+
+//Time constants
+const unsigned long QUARTER_SECOND = 1000 / 4;
+const unsigned long SIXTEENTH_SECOND = 1000 / 16;
+
+//Variabili per il controllo dei led (OUTPUT)
 int leds[N_LEDS] = {2, 3, 4, 5};
+const int N_LEDS = sizeof(leds) / sizeof(leds[0]);
+
+//Variabili per il controllo dei bottoni (INPUT)
 int buttons[N_LEDS] = {6, 7, 8, 9};
+
+//Vettore dei led accesi in ordine di accensione
 int ledsToHigh[N_LEDS];
-long r;
-int n = 0;
-int j = N_LEDS - 1;
-int l = 0;
+int nLedsOn = N_LEDS - 1;
+
+int nLightsOff = 0;
+
+int currentCorrectLeds = 0;
+
+//Variabili per il controllo del tempo di gioco
 unsigned long startTime;
-unsigned long timeToPlay = 10000; /* tempo a disposizione del giocatore */
-unsigned long deltaTime = 1000; /* tempo da rimuovere ad ogni nuovo livello */
-int level = 1; /* livello del gioco */
+//Tempo di gioco del primo livello
+unsigned long initialTime = 10000;
+//Tempo di gioco del livello corrente
+unsigned long timeToPlay = 10000;
+//Tasso di decadimento del tempo del livello
+const unsigned double decreseRate = 0.05;
 
-static void wait(unsigned long time) {
-    int beginTime = millis();
-    while (millis() - beginTime <= time);
-}
+//Livello corrente di gioco
+int level = 1;
 
-static void switchOffAnRandomLed() {
+//Spegne un led random tra quelli accesi
+static void switchOffRandomLed() {
+    long rnd;
 
     do 
     {
-        r = random(N_LEDS);
-    } while (digitalRead(leds[r]) != HIGH);
-    Serial.print("spengo la luce -> ");
-    Serial.println(r);
-    ledsToHigh[j] = r;
-    j--;
-    digitalWrite(leds[r], LOW);
+        rnd = random(N_LEDS);
+    } while (digitalRead(leds[rnd]) != HIGH);
 
+    Serial.print("spengo la luce -> ");
+    Serial.println(rnd);
+
+    ledsToHigh[nLedsOn] = rnd;
+    nLedsOn--;
+    digitalWrite(leds[rnd], LOW);
 }
 
 void setup() {  
+    //Imposta lo stato iniziale
     state = MC;
+
+    //Inizializza i pin utilizzati
     for (int i = 0; i < N_LEDS; i++) {
         pinMode(leds[i], OUTPUT);
         pinMode(buttons[i], INPUT);
         digitalWrite(leds[i], HIGH);
     }
     
+    //Inizializza la connessione seriale
     Serial.begin(9600);
+
+    //Inizializza un seme per la generazione di numeri casuali
     randomSeed(analogRead(0));
 }
 
 void loop() {
     switch (state) {
-    case MC:
-        Serial.println("state: MC");
-        wait(2000);
-        Serial.println("Ho aspettato");
-        Serial.print("n: ");
-        Serial.println(n);
-        
-        if (n == N_LEDS) {
-            startTime = millis();
-            Serial.print("start time 1: ");
-            Serial.println(startTime);
-            state = PLAYER;
-        } else {
-          switchOffAnRandomLed();
-          n++;
-        }
-        break;
-    case PLAYER:
-        Serial.println("state: PLAYER");
-        if (millis() - startTime >= timeToPlay ) {
-            l = 0;
-            state = LOSE;
-        }
-        for (int i = 0; i < N_LEDS; i++) {
-            if (digitalRead(buttons[i]) == HIGH) {
-                if (i == ledsToHigh[l]) {
-                    l++;
-                    Serial.print("l: ");
-                    Serial.println(l);
-                    digitalWrite(leds[i], HIGH);
-                    if (l == N_LEDS) {
-                        state = WIN_LEVEL;
-                    }
-                } else {
-                    state = LOSE;
-                }
-                delay(500);
-            }
-        }
+        //Nella fase del main controller, verranno verranno spenti uno ad uno i led accesi in maniera casuale
 
-        break;
-    case LOSE:
-        Serial.println("state: LOSE");
-        wait(ONE_SEC / 4);
-        for (int i = 0; i < N_LEDS; i++) {
-            digitalWrite(leds[i], HIGH);
-        }
-        wait(ONE_SEC / 4);
-        for (int i = 0; i < N_LEDS; i++) {
-            digitalWrite(leds[i], LOW);
-        }
-        break;
-    case WIN_LEVEL:
-        Serial.println("state: LEVEL PASSED");
-        timeToPlay -= deltaTime;
-        level++;
-        for (int i = 0; i < N_LEDS; i++)
-        {
-            wait(ONE_SEC / 16);
+        //MANCA IL CONTROLLO DEL POTENZIOMETRO!!!
+
+        case MC:
+            Serial.println("state: MC");
+            delay(2000);
+            Serial.println("Ho aspettato");
+            Serial.print("nLightsOff: ");
+            Serial.println(nLightsOff);
+            
+            if (nLightsOff == N_LEDS) {
+                startTime = millis();
+                Serial.print("start time 1: ");
+                Serial.println(startTime);
+                state = PLAYER;
+            } else {
+              switchOffRandomLed();
+              nLightsOff++;
+            }
+
+            break;
+        //Nella fase di Player, verrà rilevata la pressione dei pulsanti e gestita analogamente la logica di gioco
+        case PLAYER:
+            Serial.println("state: PLAYER");
+
+            if (millis() - startTime >= timeToPlay ) {
+                currentCorrectLeds = 0;
+                state = LOSE;
+            }
+
+            for (int i = 0; i < N_LEDS; i++) {
+                if (digitalRead(buttons[i]) == HIGH) {
+                    if (i == ledsToHigh[currentCorrectLeds]) {
+                        currentCorrectLeds++;
+
+                        Serial.print("currentCorrectLeds: ");
+                        Serial.println(currentCorrectLeds);
+
+                        digitalWrite(leds[i], HIGH);
+
+                        if (currentCorrectLeds == N_LEDS) {
+                            state = WIN_LEVEL;
+                        }
+                    } else {
+                        state = LOSE;
+                    }
+                    delay(500);
+                }
+            }
+
+            break;
+        case LOSE:
+            Serial.println("state: LOSE");
+      
+            delay(QUARTER_SECOND);
+
             for (int i = 0; i < N_LEDS; i++) {
                 digitalWrite(leds[i], HIGH);
             }
-            wait(ONE_SEC / 16);
+
+            delay(QUARTER_SECOND);
+
             for (int i = 0; i < N_LEDS; i++) {
                 digitalWrite(leds[i], LOW);
             }
-        }
-        
-        for (int i = 0; i < N_LEDS; i++) {
-            digitalWrite(leds[i], HIGH);
-        }
-        n = 0;
-        state = MC;
-        break;
-    default:
-        Serial.println("state: DEFAULT");
-        break;
+
+            break;
+        case WIN_LEVEL:
+            Serial.println("state: LEVEL PASSED");
+
+            timeToPlay = initialTime * Math.Pow((1 - decreseRate), level++);
+
+            for (int i = 0; i < N_LEDS; i++)
+            {
+                delay(SIXTEENTH_SECOND);
+
+                for (int i = 0; i < N_LEDS; i++) {
+                    digitalWrite(leds[i], HIGH);
+                }
+
+                delay(SIXTEENTH_SECOND);
+
+                for (int i = 0; i < N_LEDS; i++) {
+                    digitalWrite(leds[i], LOW);
+                }
+            }
+            
+            for (int i = 0; i < N_LEDS; i++) {
+                digitalWrite(leds[i], HIGH);
+            }
+
+            //Reset delle impostazioni in preparazione al riavvio del livello
+            nLightsOff = 0;
+            state = MC;
+            break;
+        default:
+            Serial.println("state: DEFAULT");
+            break;
     }
     
     /* utile per la lettura di input analogici */
