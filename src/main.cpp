@@ -1,18 +1,15 @@
 #include <Arduino.h>
 #include <time.h>
 #include <stdlib.h>
-#include <math.h>
 
-//Identificazione dello stato di gioco corrente
-enum GameState {
-  //Microcontroller (Il sistema stà inizializzando il gioco)
-  MC,
-  //Turno del giocatore
-  PLAYER,
-  //Il giocatore ha perso il gioco
-  LOSE,
-  //Il giocatore ha perso il gioco
-  WIN_LEVEL};
+/**
+ * MC: Microcontroller (Il sistema stà inizializzando il gioco)
+ * PLAYER: Turno del giocatore
+ * LOSE: Il giocatore ha perso il gioco
+ * WIN_LEVEL: Il giocatore ha perso il gioco
+ * 
+ */
+enum GameState { MC, PLAYER, LOSE, WIN_LEVEL};
 GameState state = MC;
 
 //Time constants
@@ -20,8 +17,8 @@ const unsigned long QUARTER_SECOND = 1000 / 4;
 const unsigned long SIXTEENTH_SECOND = 1000 / 16;
 
 //Variabili per il controllo dei led (OUTPUT)
+const int N_LEDS = 4;
 int leds[N_LEDS] = {2, 3, 4, 5};
-const int N_LEDS = sizeof(leds) / sizeof(leds[0]);
 
 //Variabili per il controllo della difficoltà del livello (potenziometro)
 const int POT_PIN = A0;
@@ -86,15 +83,11 @@ void setup() {
 
 void loop() {
     switch (state) {
-        //Nella fase del main controller, verranno verranno spenti uno ad uno i led accesi in maniera casuale
-
-        case MC:
-            Serial.println("state: MC");
+        //Nella fase del main controller, verranno verranno spenti uno ad uno i
+        //led accesi in maniera casuale
+        case MC: 
+        {
             delay(2000);
-            Serial.println("Ho aspettato");
-            Serial.print("nLightsOff: ");
-            Serial.println(nLightsOff);
-            
             if (nLightsOff == N_LEDS) {
                 startTime = millis();
                 Serial.print("start time 1: ");
@@ -105,7 +98,8 @@ void loop() {
               nLightsOff++;
             }
 
-            //Controllo del valore del potenziometro ed cambiamento della velocità in base all'impostazione selezionata
+            //Controllo del valore del potenziometro ed cambiamento della
+            //velocità in base all'impostazione selezionata
             int potValue = analogRead(POT_PIN);
             int dividedValue = map(potValue, 0, 1023, 0, 3);
 
@@ -128,11 +122,12 @@ void loop() {
                     level = 1;
                     break;
             }
-            timeToPlay = initialTime * Math.Pow((1 - DECRESE_RATE), level);
-
+            timeToPlay = initialTime * pow((1 - DECRESE_RATE), level++);
+        }
             break;
         //Nella fase di Player, verrà rilevata la pressione dei pulsanti e gestita analogamente la logica di gioco
         case PLAYER:
+        {
             Serial.println("state: PLAYER");
 
             if (millis() - startTime >= timeToPlay ) {
@@ -159,9 +154,10 @@ void loop() {
                     delay(500);
                 }
             }
-
+        }
             break;
         case LOSE:
+        {
             Serial.println("state: LOSE");
       
             delay(QUARTER_SECOND);
@@ -175,12 +171,13 @@ void loop() {
             for (int i = 0; i < N_LEDS; i++) {
                 digitalWrite(leds[i], LOW);
             }
-
+        }
             break;
         case WIN_LEVEL:
+        {
             Serial.println("state: LEVEL PASSED");
 
-            timeToPlay = initialTime * Math.Pow((1 - DECRESE_RATE), level++);
+            timeToPlay = initialTime * pow((1 - DECRESE_RATE), level++);
 
             for (int i = 0; i < N_LEDS; i++)
             {
@@ -204,9 +201,12 @@ void loop() {
             //Reset delle impostazioni in preparazione al riavvio del livello
             nLightsOff = 0;
             state = MC;
+        }
             break;
         default:
+        {
             Serial.println("state: DEFAULT");
+        }
             break;
     }
     
