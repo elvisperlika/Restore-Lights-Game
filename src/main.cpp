@@ -23,6 +23,9 @@ const unsigned long SIXTEENTH_SECOND = 1000 / 16;
 int leds[N_LEDS] = {2, 3, 4, 5};
 const int N_LEDS = sizeof(leds) / sizeof(leds[0]);
 
+//Variabili per il controllo della difficoltà del livello (potenziometro)
+const int POT_PIN = 10;
+
 //Variabili per il controllo dei bottoni (INPUT)
 int buttons[N_LEDS] = {6, 7, 8, 9};
 
@@ -41,7 +44,7 @@ unsigned long initialTime = 10000;
 //Tempo di gioco del livello corrente
 unsigned long timeToPlay = 10000;
 //Tasso di decadimento del tempo del livello
-const unsigned double decreseRate = 0.05;
+const double DECRESE_RATE = 0.05;
 
 //Livello corrente di gioco
 int level = 1;
@@ -85,8 +88,6 @@ void loop() {
     switch (state) {
         //Nella fase del main controller, verranno verranno spenti uno ad uno i led accesi in maniera casuale
 
-        //MANCA IL CONTROLLO DEL POTENZIOMETRO!!!
-
         case MC:
             Serial.println("state: MC");
             delay(2000);
@@ -103,6 +104,31 @@ void loop() {
               switchOffRandomLed();
               nLightsOff++;
             }
+
+            //Controllo del valore del potenziometro ed cambiamento della velocità in base all'impostazione selezionata
+            int potValue = analogRead(POT_PIN);
+            int dividedValue = map(potValue, 0, 1023, 0, 3);
+
+            switch (dividedValue)
+            {
+                case 0:
+                    level = 1;
+                    break;
+                case 1:
+                    level = 2;
+                    break;
+                case 2:
+                    level = 3;
+                    break;
+                case 3:
+                    level = 4;
+                    break;
+                
+                default:
+                    level = 1;
+                    break;
+            }
+            timeToPlay = initialTime * Math.Pow((1 - DECRESE_RATE), level++);
 
             break;
         //Nella fase di Player, verrà rilevata la pressione dei pulsanti e gestita analogamente la logica di gioco
@@ -154,7 +180,7 @@ void loop() {
         case WIN_LEVEL:
             Serial.println("state: LEVEL PASSED");
 
-            timeToPlay = initialTime * Math.Pow((1 - decreseRate), level++);
+            timeToPlay = initialTime * Math.Pow((1 - DECRESE_RATE), level++);
 
             for (int i = 0; i < N_LEDS; i++)
             {
