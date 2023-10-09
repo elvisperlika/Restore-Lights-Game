@@ -29,7 +29,7 @@ void switchLed(uint8_t ledPin, boolean state) {
 void ledFading(uint8_t ledPin, boolean state) {
     if (state == true) {
         static int currIntensity = 0;
-        static fadeAmount = 5;
+        static int fadeAmount = 5;
         analogWrite(ledPin, currIntensity);   
         currIntensity = currIntensity + fadeAmount;
         if (currIntensity == 0 || currIntensity == 255) {
