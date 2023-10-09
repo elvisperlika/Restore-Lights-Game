@@ -4,7 +4,7 @@
 const int greenLeds[] = {GREEN_LED1, GREEN_LED2, GREEN_LED3, GREEN_LED4};
 
 int getGreenLedsNumber() {
-    int size = sizeof(greenLeds) / sizeof(greenLeds[0]);
+    return sizeof(greenLeds) / sizeof(greenLeds[0]);
 }
 
 void led_init_output() {
