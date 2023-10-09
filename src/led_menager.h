@@ -1,3 +1,5 @@
+#include "Arduino.h"
+
 #ifndef __LED_BOARD__
 #define __LED_BOARD__
 
@@ -9,8 +11,6 @@
  * Red led pin must be a PWM pin.
 */
 #define RED_LED 6
-
-#include "Arduino.h"
 
 /**
  * Set the leds pin as output.

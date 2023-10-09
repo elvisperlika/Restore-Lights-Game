@@ -20,7 +20,7 @@ void loop() {
     switch (gameState)
     {
     case SETUP:
-        Serial.println("Press the Button 0 to start the game");
+        Serial.println("Welcome to the Restore the Light Game. Press Key B1 to Start");
         switchGreenLeds(false);
         ledFading(RED_LED, true);
         break;

@@ -8,12 +8,11 @@ int getGreenLedsNumber() {
 }
 
 void led_init_output() {
-    int leds[] = {GREEN_LED1, GREEN_LED2, GREEN_LED3, GREEN_LED4, RED_LED};
-    int size = sizeof(leds) / sizeof(leds[0]);
-    for (int i = 0; i < size; i++)
+    for (int i = 0; i < getGreenLedsNumber(); i++)
     {
-        pinMode(leds[i], OUTPUT);
+        pinMode(greenLeds[i], OUTPUT);
     }
+    pinMode(RED_LED, OUTPUT);
 }
 
 void switchGreenLeds(boolean state) {
