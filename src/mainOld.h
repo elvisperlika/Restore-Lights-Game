@@ -25,3 +25,8 @@ int mcTimer(unsigned long time);
  * Timer 'not blocking' function only usable from PLAYER.
 */
 int playerTimer(unsigned long time);
+
+/**
+ * Initialize the game.
+*/
+void game_init();
