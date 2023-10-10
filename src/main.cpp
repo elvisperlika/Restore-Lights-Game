@@ -26,7 +26,9 @@ void printStringOneTime(String s);
 static boolean printed = false;
 
 unsigned long sleepModeStartTime = millis();
-unsigned long T1 = millis();
+unsigned long T1;
+unsigned long T2;
+unsigned long T3;
 /**
  * Player have 10s to start the game or the system go in deep sleep mode.
 */
@@ -49,9 +51,14 @@ void loop() {
     case MC:
         basicTimer(THREE_SECONDS, switchGreenLeds, true);
 
+        /* this is one of the last function to launch in this state */
+        activateButtonsGameInterrupt();
         break;
     case PLAYER:
-
+        /* here check if the player pressed wrong button */
+        /* here check if the player win the game */
+        /* this is one of the last function to launch in this state */
+        basicTimer(T3, gameOver, true);
         break;
     case NEWLEVEL:
         break;
@@ -79,4 +86,8 @@ void printStringOneTime(String s) {
         Serial.println(s);
         printed = true;
     }
+}
+
+void gameOver(boolean s) {
+    gameState = GAMEOVER;
 }

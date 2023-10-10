@@ -10,4 +10,17 @@
 */
 int getButtonsNumber();
 
+/**
+ * Activate buttons interrupt util to game.
+ * Set the variable 'bp' to -1.
+*/
+void activateButtonsGameInterrupt();
+
+/**
+ * Check if is the correct button to press.
+ * @param buttonPin button pin to check.
+*/
+void buttonPressed(int buttonPin);
+
+
 #endif
