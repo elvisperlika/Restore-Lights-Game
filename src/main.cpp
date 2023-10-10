@@ -2,6 +2,7 @@
 #include "game_system.h"
 #include "led_menager.h"
 #include "sleep_mode_utility.h"
+#include "button_manager.h"
 
 #define TEN_SECONDS 10000
 #define THREE_SECONDS 3000
@@ -11,14 +12,18 @@ GameState gameState = SETUP;
  * This timer launch method after a certain time.
  * @param time time in milliseconds
  * @param function function to launch
+ * @param s is the function's parameter 
 */
 void basicTimer(unsigned long time, void (*function)(boolean), boolean s);
 
 /**
- * Print a string one time.
+ * Print a string one time if the field 'printed' is false.
+ * If you wont to print the string again, you have to set the field 'printed' to false.
  * @param s string to print
 */
 void printStringOneTime(String s);
+
+static boolean printed = false;
 
 unsigned long sleepModeStartTime = millis();
 unsigned long T1 = millis();
@@ -43,8 +48,10 @@ void loop() {
         break;
     case MC:
         basicTimer(THREE_SECONDS, switchGreenLeds, true);
+
         break;
     case PLAYER:
+
         break;
     case NEWLEVEL:
         break;
@@ -68,7 +75,6 @@ static void sleepNowTrampoline(boolean s) {
 }
 
 void printStringOneTime(String s) {
-    static boolean printed = false;
     if (!printed) {
         Serial.println(s);
         printed = true;

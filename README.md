@@ -15,8 +15,8 @@ Gieck
 - spegnimento dei led (uno alla volta) randomicamente con un distacco di tempo T2
 
 Elvis
-- il sistema si riattiva al premere di un qualsiasi pulsante -> dallo stato di SETUP
-- timer 10 secondi -> deep sleeping (fatto)
+- il sistema si riattiva al premere di un qualsiasi pulsante -> dallo stato di SETUP (da testare)
+- timer 10 secondi -> deep sleeping (da testare)
 - accensione di tutti i led dopo un certo tempo T1 (fatto)
 - {il giocatore ha T3 tempo per completare il pattern dello spegnimento delle luci in ordine inverso}
 
