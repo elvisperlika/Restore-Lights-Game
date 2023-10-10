@@ -10,14 +10,14 @@
 Gieck
 - gestione di T2 e T3
 - suddivisone del codice 
-- timer 10 secondi -> deep sleeping
 - start al premeere di B1
 - messaggio di "GO!" nel Seriale
+- spegnimento dei led (uno alla volta) randomicamente con un distacco di tempo T2
 
 Elvis
 - il sistema si riattiva al premere di un qualsiasi pulsante -> dallo stato di SETUP
-- accensione di tutti dopo un certo tempo T1
-- spegnimento dei led (uno alla volta) randomicamente con un distacco di tempo T2
+- timer 10 secondi -> deep sleeping (fatto)
+- accensione di tutti i led dopo un certo tempo T1 (fatto)
 - {il giocatore ha T3 tempo per completare il pattern dello spegnimento delle luci in ordine inverso}
 
 Moro
