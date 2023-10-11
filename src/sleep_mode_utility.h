@@ -10,7 +10,7 @@
 void sleepNow();
 
 /**
- * Wake up from deep sleep mode.
+ * Empty function for wake up interrupt.
 */
 void wakeUpNow();
 
