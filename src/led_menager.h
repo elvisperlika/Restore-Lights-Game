@@ -31,7 +31,6 @@ void switchGreenLeds(boolean state);
 void switchLed(uint8_t ledPin, boolean state);
 
 /**
- * Switch on or off the fading of a led.
  * If the fading is activated the led will fade in and out
  * else the led will be switch off.
  * @param ledPin: pin of the led to switch on or off.
