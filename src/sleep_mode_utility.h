@@ -1,4 +1,7 @@
+#ifndef __SLEEP_MODE_UTILITY_H__
+#define __SLEEP_MODE_UTILITY_H__
 #include "led_menager.h"
+#include "button_manager.h"
 
 /**
  * Activate deep sleep mode and set the interrupt 
@@ -9,4 +12,6 @@ void sleepNow();
 /**
  * Wake up from deep sleep mode.
 */
-static void wakeUpNow();
+void wakeUpNow();
+
+#endif

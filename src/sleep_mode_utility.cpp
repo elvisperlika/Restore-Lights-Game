@@ -5,15 +5,16 @@
 void sleepNow() {
     set_sleep_mode(SLEEP_MODE_PWR_DOWN);
     sleep_enable();
-    // al posto del 4 ci va un metodo che ritorna il numero di pulsanti
-    for (int i = 0; i < 4; i++) {
-        // al posto di 0 si deve scorrere il vettore di pulsanti
-        attachInterrupt(0, wakeUpNow, LOW);
-    }
+    attachInterrupt(BUTTON1, wakeUpNow, LOW);
+    attachInterrupt(BUTTON2, wakeUpNow, LOW);
+    attachInterrupt(BUTTON3, wakeUpNow, LOW);
+    attachInterrupt(BUTTON4, wakeUpNow, LOW);
     sleep_mode();
     sleep_disable();
+    detachInterrupt(BUTTON1);
+    detachInterrupt(BUTTON2);
+    detachInterrupt(BUTTON3);
+    detachInterrupt(BUTTON4);
 }
 
-static void wakeUpNow() {
-    /* TODO */
-}
+void wakeUpNow(){};
