@@ -10,6 +10,12 @@
 GameState gameState = SETUP;
 
 /**
+ * Set the game state to GAMEOVER.
+ * @param s is not used, it's only to respect the function's signature.
+*/
+void setGameOver(boolean s);
+
+/**
  * This timer launch method after a certain time.
  * @param limitTime is the time after which the function is launched
  * @param startTime is the time when the timer start
@@ -24,6 +30,12 @@ void basicTimer(unsigned long limitTime, unsigned long startTime, void (*functio
  * @param s string to print
 */
 void printStringOneTime(String s);
+
+/**
+ * This function is a trampoline to the sleepNow() function.
+ * @param s is not used, it's only to respect the function's signature.
+*/
+static void sleepNowTrampoline(boolean s);
 
 static boolean printed = false;
 
@@ -56,8 +68,6 @@ void setup() {
     Serial.begin(9600);
 }
 
-static void sleepNowTrampoline(boolean s);
-
 void gameOver(boolean s) {
     gameState = GAMEOVER;
 }
@@ -85,7 +95,7 @@ void loop() {
         /* here check if the player pressed wrong button */
         /* here check if the player win the game */
         /* this is one of the last function to launch in this state */
-        basicTimer(T3, gameOverStartTime, gameOver, true);
+        basicTimer(T3, gameOverStartTime, setGameOver, true);
         /* this is the last function to launch in this state */
         deactivateButtonsGameInterrupt();
         break;
@@ -119,4 +129,8 @@ static void sleepNowTrampoline(boolean s) {
     switchGreenLeds(false);
     switchLed(RED_LED, false);
     sleepNow();
+}
+
+void setGameOver(boolean s) {
+    gameState = GAMEOVER;
 }
