@@ -1,20 +1,24 @@
 #include <Arduino.h>
 #include <avr/sleep.h>
+#include <avr/power.h>
 #include "sleep_mode_utility.h"
 
 void sleepNow() {
     set_sleep_mode(SLEEP_MODE_PWR_DOWN);
     sleep_enable();
-    attachInterrupt(BUTTON1, wakeUpNow, LOW);
-    attachInterrupt(BUTTON2, wakeUpNow, LOW);
-    attachInterrupt(BUTTON3, wakeUpNow, LOW);
-    attachInterrupt(BUTTON4, wakeUpNow, LOW);
+    attachInterrupt(digitalPinToInterrupt(BUTTON1), wakeUpNow, RISING);
+    attachInterrupt(digitalPinToInterrupt(BUTTON2), wakeUpNow, RISING);
+    attachInterrupt(digitalPinToInterrupt(BUTTON3), wakeUpNow, RISING);
+    attachInterrupt(digitalPinToInterrupt(BUTTON4), wakeUpNow, RISING);
     sleep_mode();
     sleep_disable();
+    
     detachInterrupt(BUTTON1);
     detachInterrupt(BUTTON2);
     detachInterrupt(BUTTON3);
     detachInterrupt(BUTTON4);
 }
 
-void wakeUpNow(){};
+void wakeUpNow(){
+    Serial.println("pressed");
+};

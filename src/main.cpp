@@ -25,7 +25,7 @@ void printStringOneTime(String s);
 
 static boolean printed = false;
 
-unsigned long sleepModeStartTime = millis();
+unsigned long sleepModeStartTime;
 unsigned long T1;
 unsigned long T2;
 unsigned long T3;
@@ -36,7 +36,15 @@ unsigned long sleepModeTime = TEN_SECONDS;
 
 void setup() {
     led_init_output();
+    button_init_input();
+    sleepModeStartTime = millis();
     Serial.begin(9600);
+}
+
+static void sleepNowTrampoline(boolean s);
+
+void gameOver(boolean s) {
+    gameState = GAMEOVER;
 }
 
 void loop() {
@@ -44,21 +52,25 @@ void loop() {
     {
     case SETUP:
         printStringOneTime("Welcome to the Restore the Light Game. Press Key B1 to Start");
-        switchGreenLeds(false);
+        switchGreenLeds(true);
         ledFading(RED_LED, true);
         basicTimer(TEN_SECONDS, sleepNowTrampoline, true);
         break;
     case MC:
+        ledFading(RED_LED, true);
         basicTimer(THREE_SECONDS, switchGreenLeds, true);
 
         /* this is one of the last function to launch in this state */
         activateButtonsGameInterrupt();
+        Serial.println("Si riparte");
         break;
     case PLAYER:
         /* here check if the player pressed wrong button */
         /* here check if the player win the game */
         /* this is one of the last function to launch in this state */
         basicTimer(T3, gameOver, true);
+        /* this is the last function to launch in this state */
+        deactivateButtonsGameInterrupt();
         break;
     case NEWLEVEL:
         break;
@@ -67,18 +79,12 @@ void loop() {
     default:
         break;
     }
-    delay(1000);
 }
 
 void basicTimer(unsigned long time, void (*function)(boolean), boolean s) {
     if (millis() - sleepModeStartTime >= time) {
-        Serial.println("Switch on green leds");
         function(s);
     }
-}
-
-static void sleepNowTrampoline(boolean s) {
-    sleepNow();
 }
 
 void printStringOneTime(String s) {
@@ -88,6 +94,10 @@ void printStringOneTime(String s) {
     }
 }
 
-void gameOver(boolean s) {
-    gameState = GAMEOVER;
+static void sleepNowTrampoline(boolean s) {
+    Serial.println("Sleep mode actived");
+    switchGreenLeds(false);
+    switchLed(RED_LED, false);
+    sleepNow();
+    sleepModeStartTime = millis();
 }
