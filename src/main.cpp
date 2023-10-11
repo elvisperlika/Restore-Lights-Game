@@ -3,6 +3,7 @@
 #include "led_menager.h"
 #include "sleep_mode_utility.h"
 #include "button_manager.h"
+#include "game_over.h"
 
 #define TEN_SECONDS 10000
 #define THREE_SECONDS 3000
@@ -29,6 +30,7 @@ unsigned long sleepModeStartTime = millis();
 unsigned long T1;
 unsigned long T2;
 unsigned long T3;
+unsigned long points;
 /**
  * Player have 10s to start the game or the system go in deep sleep mode.
 */
@@ -63,6 +65,8 @@ void loop() {
     case NEWLEVEL:
         break;
     case GAMEOVER:
+        gameOver(points);
+        gameState = SETUP;
         break;
     default:
         break;
