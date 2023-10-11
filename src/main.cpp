@@ -36,6 +36,12 @@ unsigned long points;
 */
 unsigned long sleepModeTime = TEN_SECONDS;
 
+// Variable used on not blocking delays
+int prevTime = 0;
+
+// State of the MC phase, true if still have to light up some leds, false otherwise
+bool ledsTurningOn = true;
+
 void setup() {
     led_init_output();
     Serial.begin(9600);
@@ -49,12 +55,34 @@ void loop() {
         switchGreenLeds(false);
         ledFading(RED_LED, true);
         basicTimer(TEN_SECONDS, sleepNowTrampoline, true);
+        
+        if (digitalRead(BUTTON1) == HIGH) {
+            gameState = MC;
+            Serial.println("GO!");
+        }
         break;
     case MC:
         basicTimer(THREE_SECONDS, switchGreenLeds, true);
+        // Two separate phases, when leds are turing on, and when are turning on
+        if (ledsTurningOn) {
 
-        /* this is one of the last function to launch in this state */
-        activateButtonsGameInterrupt();
+        } else {
+            if (millis() - prevTime >= CalculateT2(currentLevel, currentDifficulty)) {
+                
+                // Check if the MC fase is finished
+                if (getGreenLedsNumber() == 0) {
+                    gameState = PLAYER;
+                    break;
+                }
+                
+            }
+            
+            /* this is one of the last function to launch in this state */
+            activateButtonsGameInterrupt();
+        }
+        // prevTime reset for the next cycle
+        prevTime = millis();    
+
         break;
     case PLAYER:
         /* here check if the player pressed wrong button */
