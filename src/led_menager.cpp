@@ -31,12 +31,13 @@ void ledFading(uint8_t ledPin, boolean state) {
         static int currIntensity = 0;
         static int fadeAmount = 5;
         analogWrite(ledPin, currIntensity);   
+        Serial.println(currIntensity);
         currIntensity = currIntensity + fadeAmount;
-        if (currIntensity == 0 || currIntensity == 255) {
-            fadeAmount = -fadeAmount; 
-        }     
-        delay(15);
+    if (currIntensity == 0 || currIntensity == 255) {
+        fadeAmount = -fadeAmount; 
+    }     
+    delay(15);
     } else {
         digitalWrite(ledPin, LOW);
-    }
+}
 }

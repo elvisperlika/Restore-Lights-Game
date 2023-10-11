@@ -9,32 +9,44 @@ int bp;
 int inLevelScore = 0;
 boolean gameOverFlag = false;
 
+void button_init_input() {
+    for (int i = 0; i < getButtonsNumber(); i++) {
+        pinMode(buttons[i], INPUT);
+    }
+}
+
 int getButtonsNumber() {
     return sizeof(buttons) / sizeof(buttons[0]);
 }
 
-void activateButtonsGameInterrupt() {
-    bp = -1;
-    attachInterrupt(buttons[0], buttonPressed1, HIGH);
-    attachInterrupt(buttons[1], buttonPressed2, HIGH);
-    attachInterrupt(buttons[2], buttonPressed3, HIGH);
-    attachInterrupt(buttons[3], buttonPressed4, HIGH);
-}
-
-void buttonPressed1() {
+static void buttonPressed1() {
     buttonPressed(BUTTON1);
 }
 
-void buttonPressed2() {
+static void buttonPressed2() {
     buttonPressed(BUTTON2);
 }
 
-void buttonPressed3() {
+static void buttonPressed3() {
     buttonPressed(BUTTON3);
 }
 
-void buttonPressed4() {
+static void buttonPressed4() {
     buttonPressed(BUTTON4);
+}
+
+void activateButtonsGameInterrupt() {
+    bp = -1;
+    attachInterrupt(digitalPinToInterrupt(BUTTON1), buttonPressed1, HIGH);
+    attachInterrupt(digitalPinToInterrupt(BUTTON2), buttonPressed2, HIGH);
+    attachInterrupt(digitalPinToInterrupt(BUTTON3), buttonPressed3, HIGH);
+    attachInterrupt(digitalPinToInterrupt(BUTTON4), buttonPressed4, HIGH);
+}
+
+void deactivateButtonsGameInterrupt() {
+    for (int i = 0; i < getButtonsNumber(); i++) {
+        detachInterrupt(buttons[i]);
+    }
 }
 
 void buttonPressed(int buttonPin) {
