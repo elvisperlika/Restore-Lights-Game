@@ -3,22 +3,21 @@
 #include <avr/power.h>
 #include "sleep_mode_utility.h"
 
+const int buttons[] = {BUTTON1, BUTTON2, BUTTON3, BUTTON4};
+
 void sleepNow() {
     set_sleep_mode(SLEEP_MODE_PWR_DOWN);
     sleep_enable();
-    attachInterrupt(digitalPinToInterrupt(BUTTON1), wakeUpNow, RISING);
-    attachInterrupt(digitalPinToInterrupt(BUTTON2), wakeUpNow, RISING);
-    attachInterrupt(digitalPinToInterrupt(BUTTON3), wakeUpNow, RISING);
-    attachInterrupt(digitalPinToInterrupt(BUTTON4), wakeUpNow, RISING);
+    for (int i = 0; i < getButtonsNumber(); i++) {
+        attachInterrupt(digitalPinToInterrupt(buttons[i]), wakeUpNow, RISING);
+    }
+    
     sleep_mode();
     sleep_disable();
     
-    detachInterrupt(BUTTON1);
-    detachInterrupt(BUTTON2);
-    detachInterrupt(BUTTON3);
-    detachInterrupt(BUTTON4);
+    for (int i = 0; i < getButtonsNumber(); i++) {
+        detachInterrupt(digitalPinToInterrupt(buttons[i]));
+    }
 }
 
-void wakeUpNow(){
-    Serial.println("pressed");
-};
+void wakeUpNow(){};
