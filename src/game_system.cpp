@@ -6,6 +6,12 @@ const float DECREASE_RATES[] = {0.05, 0.07, 0.09, 0.11};
 
 const float e = 2.7182818284;
 
+/// Initial leds turning off time
+const unsigned int INITIAL_T2 = 3000;
+
+/// Initial time Player have to finish the level on easiest difficulty
+const unsigned int INITIAL_T3 = 10000;
+
 /// @brief Apply a formula that follow an'exponential decrese of the time
 /// @param initialValue 
 /// @param decreaseRatio 

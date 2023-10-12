@@ -15,10 +15,10 @@ enum GameState {
 };
 
 /// Initial leds turning off time
-extern const int INITIAL_T2 = 3000;
+extern const unsigned int INITIAL_T2;
 
 /// Initial time Player have to finish the level on easiest difficulty
-extern const int INITIAL_T3 = 10000;
+extern const unsigned int INITIAL_T3;
 
 /// Current Player level
 extern int currentLevel;
