@@ -57,3 +57,7 @@ void buttonPressed(int buttonPin) {
         gameOverFlag = true;
     }
 }
+
+int inLevelScoreGetter(){
+    return inLevelScore;
+}

@@ -4,6 +4,7 @@
 #include "sleep_mode_utility.h"
 #include "button_manager.h"
 #include "game_over.h"
+#include "check_win_lose.h"
 
 #define TEN_SECONDS 10000
 #define THREE_SECONDS 3000
@@ -38,6 +39,8 @@ void printStringOneTime(String s);
 static void sleepNowTrampoline(boolean s);
 
 static boolean printed = false;
+//Boolean that will became true if the player win
+bool checkWin = false;
 
 unsigned long sleepModeStartTime;
 unsigned long switchGreenLedsStartTime;
@@ -94,6 +97,10 @@ void loop() {
     case PLAYER:
         /* here check if the player pressed wrong button */
         /* here check if the player win the game */
+        if(checkWinLose() == 4){
+            points++; //The player won so points++
+            checkWin = true; //Set the boolean true
+        }
         /* this is one of the last function to launch in this state */
         basicTimer(T3, gameOverStartTime, setGameOver, true);
         /* this is the last function to launch in this state */
