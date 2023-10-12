@@ -1,12 +1,32 @@
 #include <Arduino.h>
 #include "game_system.h"
 
-const double DECRESE_RATES[] = {0.05, 0.1, 0.15, 0.2};
+/// Array of each decrease rate for each difficulty.
+const float DECREASE_RATES[] = {0.05, 0.07, 0.09, 0.11};
 
-int CalculateT2(int level, int difficulty) {
-  return INITIAL_T2 * pow(1 - DECRESE_RATES[difficulty], level);
+const float e = 2.7182818284;
+
+/// @brief Apply a formula that follow an'exponential decrese of the time
+/// @param initialValue 
+/// @param decreaseRatio 
+/// @param level 
+/// @return 
+double ApplyDecreasingFormula(float initialValue, float decreaseRatio, int level) {
+  return initialValue * pow(e, -decreaseRatio * level);
 }
 
-int CalculateT3(int level, int difficulty) {
-  return INITIAL_T3 * pow(1 - DECRESE_RATES[difficulty], (double)level);
+/// @brief Calculate the value of T2 of the given level.
+/// @param level: current level.
+/// @param difficulty: current difficulty.
+/// @return the new T2.
+double CalculateT2(int level, int difficulty) {
+  return ApplyDecreasingFormula(INITIAL_T2, DECREASE_RATES[difficulty], level);
+}
+
+/// @brief Calculate the value of T3 of the given level.
+/// @param level: current level.
+/// @param difficulty: current difficulty.
+/// @return the new T3.
+double CalculateT3(int level, int difficulty) {
+  return ApplyDecreasingFormula(INITIAL_T3, DECREASE_RATES[difficulty], level);
 }
