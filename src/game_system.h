@@ -30,10 +30,10 @@ extern int currentDifficulty;
 /// @param level: current level.
 /// @param difficulty: current difficulty.
 /// @return the new T2.
-double CalculateT2(int level, int difficulty);
+float CalculateT2(int level, int difficulty);
 
 /// @brief Calculate the value of T3 of the given level.
 /// @param level: current level.
 /// @param difficulty: current difficulty.
 /// @return the new T3.
-double CalculateT3(int level, int difficulty);
+float CalculateT3(int level, int difficulty);
