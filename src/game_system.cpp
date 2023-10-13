@@ -54,6 +54,13 @@ void gameInit(int difficulty) {
   currentT3 = CalculateT3(currentLevel, difficulty);
 }
 
+/// @brief Called when current level is passed
+void levelPassed() {
+  currentLevel++;
+  currentT2 = CalculateT2(currentLevel, currentDifficulty);
+  currentT3 = CalculateT3(currentLevel, currentDifficulty);
+}
+
 /// @brief Execute the game over steps
 /// @param points: number of levels that the player passed
 void gameOver(int points){

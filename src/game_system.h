@@ -44,6 +44,9 @@ float CalculateT3(int level, int difficulty);
 /// @param difficulty: current game difficulty.
 void gameInit(int difficulty);
 
+/// @brief Called when current level is passed
+void levelPassed();
+
 /// @brief Execute the game over steps
 /// @param points: number of levels that the player passed
 void gameOver(int points);
