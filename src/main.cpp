@@ -5,45 +5,30 @@
 #include "sleep_mode_utility.h"
 #include "button_manager.h"
 
-/// 
+bool printSetupMessage = true;
+
+/// Define the current state of the game
+GameState gameState = SETUP;
+
+/// Variables managing timers for events
 unsigned long sleepModeStartTime;
 unsigned long switchGreenLedsStartTime;
 unsigned long gameOverStartTime;
-
-//Current session variables
-int currentDifficulty = 0;
-int currentLevel = 0;
-
-int currentT2 = INITIAL_T2;
-int currentT3 = INITIAL_T3;
-
-bool printSetupMessage = true;
-
-// Define the current state of the game
-GameState gameState = SETUP;
 
 /**
  * T1 is the time after which the green led switch on.
 */
 unsigned long T1 = THREE_SECONDS;
-/**
- * T2 is the interval time between the led's switching off.
-*/
-unsigned long T2;
-/**
- * T3 is the time that the player have to complete the pattern.
-*/
-unsigned long T3;
-unsigned long points;
+
 /**
  * Player have 10s to start the game or the system go in deep sleep mode.
 */
 unsigned long sleepModeTime = TEN_SECONDS;
 
-// Variable used on not blocking delays
+/// Variable used on not blocking delays
 int prevTime = 0;
 
-// State of the MC phase, true if still have to light up some leds, false otherwise
+/// State of the MC phase, true if still have to light up some leds, false otherwise
 bool ledsTurningOn = true;
 
 void setup() {
@@ -79,8 +64,7 @@ void loop() {
             ledsTurningOn = false;
             prevTime = millis();
         } else {
-            // !! Invece che una call alla funzione dovrebbe esserci una var currentT2
-            if (millis() - prevTime >= CalculateT2(currentLevel, currentDifficulty)) {                
+            if (millis() - prevTime >= currentT2) {                
                 
                 // Check if the MC phase is finished
                 if (getGreenLedsNumber() == 0) {
@@ -109,7 +93,7 @@ void loop() {
         /* here check if the player pressed wrong button */
         /* here check if the player win the game */
         /* this is one of the last function to launch in this state */
-        basicTimer(T3, &gameOverStartTime, setGameOver);
+        basicTimer(currentT3, &gameOverStartTime, setGameOver);
         /* this is the last function to launch in this state */
         deactivateButtonsGameInterrupt();
         break;
@@ -124,14 +108,10 @@ void loop() {
         break;
     }
 }
-
-void basicTimer(unsigned long limitTime, unsigned long *startTime, void (*function)(bool), bool s) {
-    if (millis() - *startTime >= limitTime) {
-        function(s);
-        *startTime = millis();
-    }
-}
-
+/// @brief Call a function if enough time passed
+/// @param limitTime is the time after which the function is launched
+/// @param startTime is a pointer to a variable representing the start time
+/// @param function function to launch
 void basicTimer(unsigned long limitTime, unsigned long *startTime, void (*function)()) {
     if (millis() - *startTime >= limitTime) {
         function();
@@ -139,7 +119,19 @@ void basicTimer(unsigned long limitTime, unsigned long *startTime, void (*functi
     }
 }
 
-static void sleepNowTrampoline() {
+/// @brief Call a function if enough time passed
+/// @param limitTime is the time after which the function is launched
+/// @param startTime is a pointer to a variable representing the start time
+/// @param function function to launch
+/// @param s is the function's parameter
+void basicTimer(unsigned long limitTime, unsigned long *startTime, void (*function)(bool), bool s) {
+    if (millis() - *startTime >= limitTime) {
+        function(s);
+        *startTime = millis();
+    }
+}
+
+void sleepNowTrampoline() {
     Serial.println("Sleep mode actived");
     switchGreenLeds(false);
     switchLed(RED_LED, false);

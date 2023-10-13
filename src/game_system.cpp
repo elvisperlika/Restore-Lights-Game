@@ -14,11 +14,17 @@ const unsigned int INITIAL_T2 = 3000;
 /// Initial time Player have to finish the level on easiest difficulty in milliseconds
 const unsigned int INITIAL_T3 = 10000;
 
+// Variables value related to the current session
+int currentT2;
+int currentT3;
+int currentLevel;
+int currentDifficulty;
+
 /// @brief Apply a formula that follow an'exponential decrese of the time
 /// @param initialValue: starting value 
 /// @param decreaseRatio: the greater, the fastest the number goes down 
 /// @param level: starting from 0, more level means less time, less level more time
-/// @return 
+/// @return
 float ApplyDecreasingFormula(float initialValue, float decreaseRatio, int level) {
   return initialValue * pow(e, -decreaseRatio * level);
 }
@@ -37,6 +43,15 @@ float CalculateT2(int level, int difficulty) {
 /// @return the new T3.
 float CalculateT3(int level, int difficulty) {
   return ApplyDecreasingFormula(INITIAL_T3, DECREASE_RATES[difficulty], level);
+}
+
+/// @brief Initialize the game variables
+/// @param difficulty: current game difficulty.
+void gameInit(int difficulty) {
+  currentLevel = 0;
+  currentDifficulty = difficulty;
+  currentT2 = CalculateT2(currentLevel, difficulty);
+  currentT3 = CalculateT3(currentLevel, difficulty);
 }
 
 /// @brief Execute the game over steps
