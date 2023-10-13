@@ -18,7 +18,7 @@
 void led_init_output();
 
 /**
- * Switch on or off the red led.
+ * Switch all the leds on or off.
  * @param state: true to switch on, false to switch off.
 */
 void switchGreenLeds(boolean state);
