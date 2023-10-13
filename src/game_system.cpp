@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include "game_system.h"
+#include "led_manager.h"
 
 /// Array of each decrease rate for each difficulty.
 const float DECREASE_RATES[] = {0.05, 0.07, 0.09, 0.11};
@@ -36,4 +37,16 @@ float CalculateT2(int level, int difficulty) {
 /// @return the new T3.
 float CalculateT3(int level, int difficulty) {
   return ApplyDecreasingFormula(INITIAL_T3, DECREASE_RATES[difficulty], level);
+}
+
+int gameOver(int points){
+    Serial.println(points);
+    int startingTime = millis();
+    //arduino led fade from light on to light off over 10 sec
+    analogWrite(RED_LED, 255);
+    for (; millis() - startingTime < 10000;) {
+        analogWrite(RED_LED, map(millis() - startingTime, 0, 10000, 255, 0));
+    }
+    analogWrite(RED_LED, 0);
+    return 0;
 }

@@ -37,3 +37,5 @@ float CalculateT2(int level, int difficulty);
 /// @param difficulty: current difficulty.
 /// @return the new T3.
 float CalculateT3(int level, int difficulty);
+
+int gameOver();
