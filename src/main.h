@@ -14,7 +14,7 @@ void setGameOver(bool s);
 /// @param startTime is a pointer to a variable representing the start time
 /// @param function function to launch
 /// @param s is the function's parameter
-void basicTimer(unsigned long limitTime, unsigned long startTime, void (*function)(bool), boolean s);
+void basicTimer(unsigned long limitTime, unsigned long *startTime, void (*function)(bool), boolean s);
 
 
 /// @brief This function is a trampoline to the sleepNow() function.

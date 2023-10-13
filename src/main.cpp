@@ -63,7 +63,7 @@ void loop() {
         }
         switchGreenLeds(false);
         ledFading(RED_LED, true);
-        basicTimer(TEN_SECONDS, sleepModeStartTime, sleepNowTrampoline, true);
+        basicTimer(TEN_SECONDS, &sleepModeStartTime, sleepNowTrampoline, true);
         /* this initialization must bo done before changing state in MC */
         switchGreenLedsStartTime = millis();
         
@@ -75,7 +75,7 @@ void loop() {
     case MC:
         // Two separate phases, when leds are turing on, and when are turning off one by one
         if (ledsTurningOn) {
-            basicTimer(T1, switchGreenLedsStartTime, switchGreenLeds, true);
+            basicTimer(T1, &switchGreenLedsStartTime, switchGreenLeds, true);
             ledsTurningOn = false;
             prevTime = millis();
         } else {
@@ -109,7 +109,7 @@ void loop() {
         /* here check if the player pressed wrong button */
         /* here check if the player win the game */
         /* this is one of the last function to launch in this state */
-        basicTimer(T3, gameOverStartTime, setGameOver, true);
+        basicTimer(T3, &gameOverStartTime, setGameOver, true);
         /* this is the last function to launch in this state */
         deactivateButtonsGameInterrupt();
         break;
@@ -125,10 +125,10 @@ void loop() {
     }
 }
 
-void basicTimer(unsigned long limitTime, unsigned long startTime, void (*function)(bool), bool s) {
-    if (millis() - startTime >= limitTime) {
+void basicTimer(unsigned long limitTime, unsigned long *startTime, void (*function)(bool), bool s) {
+    if (millis() - *startTime >= limitTime) {
         function(s);
-        startTime = millis();
+        *startTime = millis();
     }
 }
 
