@@ -1,47 +1,26 @@
 #include <Arduino.h>
+#include "main.h"
 #include "game_system.h"
-#include "led_menager.h"
+#include "led_manager.h"
 #include "sleep_mode_utility.h"
 #include "button_manager.h"
-#include "game_over.h"
 
-#define TEN_SECONDS 10000
-#define THREE_SECONDS 3000
-GameState gameState = SETUP;
-
-/**
- * Set the game state to GAMEOVER.
- * @param s is not used, it's only to respect the function's signature.
-*/
-void setGameOver(boolean s);
-
-/**
- * This timer launch method after a certain time.
- * @param limitTime is the time after which the function is launched
- * @param startTime is the time when the timer start
- * @param function function to launch
- * @param s is the function's parameter 
-*/
-void basicTimer(unsigned long limitTime, unsigned long startTime, void (*function)(boolean), boolean s);
-
-/**
- * Print a string one time if the field 'printed' is false.
- * If you wont to print the string again, you have to set the field 'printed' to false.
- * @param s string to print
-*/
-void printStringOneTime(String s);
-
-/**
- * This function is a trampoline to the sleepNow() function.
- * @param s is not used, it's only to respect the function's signature.
-*/
-static void sleepNowTrampoline(boolean s);
-
-static boolean printed = false;
-
+/// 
 unsigned long sleepModeStartTime;
 unsigned long switchGreenLedsStartTime;
 unsigned long gameOverStartTime;
+
+//Current session variables
+int currentDifficulty = 0;
+int currentLevel = 0;
+
+int currentT2 = INITIAL_T2;
+int currentT3 = INITIAL_T3;
+
+bool printSetupMessage = true;
+
+// Define the current state of the game
+GameState gameState = SETUP;
 
 /**
  * T1 is the time after which the green led switch on.
@@ -74,15 +53,14 @@ void setup() {
     Serial.begin(9600);
 }
 
-void gameOver(boolean s) {
-    gameState = GAMEOVER;
-}
-
 void loop() {
     switch (gameState)
     {
     case SETUP:
-        printStringOneTime("Welcome to the Restore the Light Game. Press Key B1 to Start");
+        if (printSetupMessage) {
+            Serial.println("Welcome to the Restore the Light Game. Press Key B1 to Start");
+            printSetupMessage = false;
+        }
         switchGreenLeds(false);
         ledFading(RED_LED, true);
         basicTimer(TEN_SECONDS, sleepModeStartTime, sleepNowTrampoline, true);
@@ -138,35 +116,29 @@ void loop() {
     case NEWLEVEL:
         break;
     case GAMEOVER:
-        gameOver(points);
+        gameOver(currentLevel);
         gameState = SETUP;
+        printSetupMessage = true;
         break;
     default:
         break;
     }
 }
 
-void basicTimer(unsigned long limitTime, unsigned long startTime, void (*function)(boolean), boolean s) {
+void basicTimer(unsigned long limitTime, unsigned long startTime, void (*function)(bool), bool s) {
     if (millis() - startTime >= limitTime) {
         function(s);
         startTime = millis();
     }
 }
 
-void printStringOneTime(String s) {
-    if (!printed) {
-        Serial.println(s);
-        printed = true;
-    }
-}
-
-static void sleepNowTrampoline(boolean s) {
+static void sleepNowTrampoline(bool s) {
     Serial.println("Sleep mode actived");
     switchGreenLeds(false);
     switchLed(RED_LED, false);
     sleepNow();
 }
 
-void setGameOver(boolean s) {
+void setGameOver(bool s) {
     gameState = GAMEOVER;
 }

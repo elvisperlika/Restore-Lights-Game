@@ -39,7 +39,9 @@ float CalculateT3(int level, int difficulty) {
   return ApplyDecreasingFormula(INITIAL_T3, DECREASE_RATES[difficulty], level);
 }
 
-int gameOver(int points){
+/// @brief Execute the game over steps
+/// @param points: number of levels that the player passed
+void gameOver(int points){
     Serial.println(points);
     int startingTime = millis();
     //arduino led fade from light on to light off over 10 sec
@@ -48,5 +50,4 @@ int gameOver(int points){
         analogWrite(RED_LED, map(millis() - startingTime, 0, 10000, 255, 0));
     }
     analogWrite(RED_LED, 0);
-    return 0;
 }

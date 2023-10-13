@@ -38,4 +38,6 @@ float CalculateT2(int level, int difficulty);
 /// @return the new T3.
 float CalculateT3(int level, int difficulty);
 
-int gameOver();
+/// @brief Execute the game over steps
+/// @param points: number of levels that the player passed
+void gameOver(int points);

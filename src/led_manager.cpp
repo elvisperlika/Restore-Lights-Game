@@ -39,5 +39,5 @@ void ledFading(uint8_t ledPin, boolean state) {
     delay(15);
     } else {
         digitalWrite(ledPin, LOW);
-}
+    }
 }
