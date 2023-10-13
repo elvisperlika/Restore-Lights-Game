@@ -5,6 +5,9 @@
 #include "sleep_mode_utility.h"
 #include "button_manager.h"
 
+const uint8_t POTENTIOMETER_PIN = A0;
+
+
 bool printSetupMessage = true;
 
 /// Define the current state of the game
@@ -32,8 +35,6 @@ unsigned long prevTime = 0;
 bool ledsTurningOn = true;
 
 void setup() {
-    led_init_output();
-    button_init_input();
     sleepModeStartTime = millis();
     Serial.begin(9600);
 }
@@ -47,12 +48,14 @@ void loop() {
             printSetupMessage = false;
         }
         switchGreenLeds(false);
-        ledFading(RED_LED, true);
+        ledFading(RED_LED);
         basicTimer(TEN_SECONDS, &sleepModeStartTime, sleepNowTrampoline);
         /* this initialization must bo done before changing state in MC */
         switchGreenLedsStartTime = millis();
         
         if (digitalRead(BUTTON1) == HIGH) {
+            currentDifficulty = getDifficulty();
+            gameInit(currentDifficulty);
             gameState = MC;
             Serial.println("GO!");
         }
@@ -140,4 +143,10 @@ void sleepNowTrampoline() {
 
 void setGameOver() {
     gameState = GAMEOVER;
+}
+
+
+int getDifficulty() {
+    int potValue = analogRead(POTENTIOMETER_PIN);
+    return map(potValue, 0, 1023, 1, 3);
 }
