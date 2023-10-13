@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include "game_system.h"
 #include "led_manager.h"
+#include "button_manager.h"
 
 /// Array of each decrease rate for each difficulty.
 const float DECREASE_RATES[] = {0.05, 0.07, 0.09, 0.11};
@@ -52,6 +53,9 @@ void gameInit(int difficulty) {
   currentDifficulty = difficulty;
   currentT2 = CalculateT2(currentLevel, difficulty);
   currentT3 = CalculateT3(currentLevel, difficulty);
+
+  ledsInit();
+  buttonsInit();
 }
 
 /// @brief Called when current level is passed
