@@ -1,22 +1,52 @@
 #include <Arduino.h>
 #include "button_manager.h"
+#include "game_system.h"
 
 const int buttons[] = {BUTTON1, BUTTON2, BUTTON3, BUTTON4};
-/** 
- * Button pressed index.
-*/
-int bp;
-int inLevelScore = 0;
+
+/// Button pressed index, used to know how many button still need to press, to finish the game 
+int buttonPressedIndex;
+
 boolean gameOverFlag = false;
 
+/// @brief Initialize buttons as input.
 void button_init_input() {
     for (int i = 0; i < getButtonsNumber(); i++) {
         pinMode(buttons[i], INPUT);
     }
 }
 
+/// @brief Buttons number getter.
+/// @return the number of buttons.
 int getButtonsNumber() {
     return sizeof(buttons) / sizeof(buttons[0]);
+}
+
+/// @brief Attach interrupts to each button.
+void activateButtonsGameInterrupt() {
+    buttonPressedIndex = -1;
+    attachInterrupt(digitalPinToInterrupt(BUTTON1), buttonPressed1, HIGH);
+    attachInterrupt(digitalPinToInterrupt(BUTTON2), buttonPressed2, HIGH);
+    attachInterrupt(digitalPinToInterrupt(BUTTON3), buttonPressed3, HIGH);
+    attachInterrupt(digitalPinToInterrupt(BUTTON4), buttonPressed4, HIGH);
+}
+
+/// @brief Detach interrupts from each button.
+void deactivateButtonsGameInterrupt() {
+    for (int i = 0; i < getButtonsNumber(); i++) {
+        detachInterrupt(buttons[i]);
+    }
+}
+
+/// @brief Check if has been pressed the correct button.
+/// @param buttonPin button pin to check.
+void buttonPressed(int buttonPin) {
+    buttonPressedIndex++;
+    if (buttonPin == buttons[buttonPressedIndex]) {
+        currentLevel++;
+    } else if (buttonPin != buttons[buttonPressedIndex]) {
+        gameOverFlag = true;
+    }
 }
 
 static void buttonPressed1() {
@@ -33,27 +63,4 @@ static void buttonPressed3() {
 
 static void buttonPressed4() {
     buttonPressed(BUTTON4);
-}
-
-void activateButtonsGameInterrupt() {
-    bp = -1;
-    attachInterrupt(digitalPinToInterrupt(BUTTON1), buttonPressed1, HIGH);
-    attachInterrupt(digitalPinToInterrupt(BUTTON2), buttonPressed2, HIGH);
-    attachInterrupt(digitalPinToInterrupt(BUTTON3), buttonPressed3, HIGH);
-    attachInterrupt(digitalPinToInterrupt(BUTTON4), buttonPressed4, HIGH);
-}
-
-void deactivateButtonsGameInterrupt() {
-    for (int i = 0; i < getButtonsNumber(); i++) {
-        detachInterrupt(buttons[i]);
-    }
-}
-
-void buttonPressed(int buttonPin) {
-    bp++;
-    if (buttonPin == buttons[bp]) {
-        inLevelScore++;
-    } else if (buttonPin != buttons[bp]) {
-        gameOverFlag = true;
-    }
 }
