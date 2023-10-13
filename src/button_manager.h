@@ -20,6 +20,7 @@ void deactivateButtonsGameInterrupt();
 
 /// @brief Check if has been pressed the correct button.
 /// @param buttonPin button pin to check.
-void buttonPressed(int buttonPin);
+/// @return true if the button was correct, false if it was wrong.
+bool buttonPressed(int buttonPin);
 
 #endif

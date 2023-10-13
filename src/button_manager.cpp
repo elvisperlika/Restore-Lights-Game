@@ -7,8 +7,6 @@ const int buttons[] = {BUTTON1, BUTTON2, BUTTON3, BUTTON4};
 /// Button pressed index, used to know how many button still need to press, to finish the game 
 int buttonPressedIndex;
 
-boolean gameOverFlag = false;
-
 /// @brief Initialize buttons as input.
 void button_init_input() {
     for (int i = 0; i < getButtonsNumber(); i++) {
@@ -40,27 +38,32 @@ void deactivateButtonsGameInterrupt() {
 
 /// @brief Check if has been pressed the correct button.
 /// @param buttonPin button pin to check.
-void buttonPressed(int buttonPin) {
-    buttonPressedIndex++;
-    if (buttonPin == buttons[buttonPressedIndex]) {
-        currentLevel++;
-    } else if (buttonPin != buttons[buttonPressedIndex]) {
-        gameOverFlag = true;
+/// @return true if the button was correct, false if it was wrong.
+bool buttonPressed(int buttonPin) {    
+    if (buttonPin != buttons[buttonPressedIndex]) {
+        return false;
     }
+    
+    buttonPressedIndex++;
+    return true;
 }
 
-static void buttonPressed1() {
+/// @brief Function to attach to button 1
+void buttonPressed1() {
     buttonPressed(BUTTON1);
 }
 
-static void buttonPressed2() {
+/// @brief Function to attach to button 2
+void buttonPressed2() {
     buttonPressed(BUTTON2);
 }
 
-static void buttonPressed3() {
+/// @brief Function to attach to button 3
+void buttonPressed3() {
     buttonPressed(BUTTON3);
 }
 
-static void buttonPressed4() {
+/// @brief Function to attach to button 4
+void buttonPressed4() {
     buttonPressed(BUTTON4);
 }
