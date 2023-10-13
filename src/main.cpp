@@ -95,19 +95,27 @@ void loop() {
         }
         break;
     case MC:
-        basicTimer(T1, switchGreenLedsStartTime, switchGreenLeds, true);
-        // Two separate phases, when leds are turing on, and when are turning on
+        // Two separate phases, when leds are turing on, and when are turning off one by one
         if (ledsTurningOn) {
-
+            basicTimer(T1, switchGreenLedsStartTime, switchGreenLeds, true);
+            ledsTurningOn = false;
+            prevTime = millis();
         } else {
-            if (millis() - prevTime >= CalculateT2(currentLevel, currentDifficulty)) {
+            // !! Invece che una call alla funzione dovrebbe esserci una var currentT2
+            if (millis() - prevTime >= CalculateT2(currentLevel, currentDifficulty)) {                
                 
-                // Check if the MC fase is finished
+                // Check if the MC phase is finished
                 if (getGreenLedsNumber() == 0) {
                     gameState = PLAYER;
                     break;
                 }
                 
+                //Set one random pin on LOW state
+                uint8_t randomPin = random(getGreenLedsNumber());
+                while (digitalRead(randomPin) == LOW) {
+                    randomPin = random(getGreenLedsNumber());
+                }
+                digitalWrite(randomPin, LOW);
             }
             
             /* this is one of the last function to launch in this state */
