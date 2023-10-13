@@ -8,7 +8,7 @@ const int buttons[] = {BUTTON1, BUTTON2, BUTTON3, BUTTON4};
 int buttonPressedIndex;
 
 /// @brief Initialize buttons as input.
-void button_init_input() {
+void buttonsInit() {
     for (int i = 0; i < getButtonsNumber(); i++) {
         pinMode(buttons[i], INPUT);
     }

@@ -6,7 +6,7 @@
 #define BUTTON4 11
 
 /// @brief Initialize buttons as input.
-void button_init_input();
+void buttonsInit();
 
 /// @brief Buttons number getter.
 /// @return the number of buttons.
