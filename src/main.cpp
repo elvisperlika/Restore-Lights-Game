@@ -63,7 +63,7 @@ void loop() {
         }
         switchGreenLeds(false);
         ledFading(RED_LED, true);
-        basicTimer(TEN_SECONDS, &sleepModeStartTime, sleepNowTrampoline, true);
+        basicTimer(TEN_SECONDS, &sleepModeStartTime, sleepNowTrampoline);
         /* this initialization must bo done before changing state in MC */
         switchGreenLedsStartTime = millis();
         
@@ -109,7 +109,7 @@ void loop() {
         /* here check if the player pressed wrong button */
         /* here check if the player win the game */
         /* this is one of the last function to launch in this state */
-        basicTimer(T3, &gameOverStartTime, setGameOver, true);
+        basicTimer(T3, &gameOverStartTime, setGameOver);
         /* this is the last function to launch in this state */
         deactivateButtonsGameInterrupt();
         break;
@@ -132,13 +132,20 @@ void basicTimer(unsigned long limitTime, unsigned long *startTime, void (*functi
     }
 }
 
-static void sleepNowTrampoline(bool s) {
+void basicTimer(unsigned long limitTime, unsigned long *startTime, void (*function)()) {
+    if (millis() - *startTime >= limitTime) {
+        function();
+        *startTime = millis();
+    }
+}
+
+static void sleepNowTrampoline() {
     Serial.println("Sleep mode actived");
     switchGreenLeds(false);
     switchLed(RED_LED, false);
     sleepNow();
 }
 
-void setGameOver(bool s) {
+void setGameOver() {
     gameState = GAMEOVER;
 }
