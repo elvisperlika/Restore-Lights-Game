@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include "led_menager.h"
+#include "led_manager.h"
 
 const int greenLeds[] = {GREEN_LED1, GREEN_LED2, GREEN_LED3, GREEN_LED4};
 

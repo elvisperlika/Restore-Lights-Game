@@ -1,6 +1,6 @@
 #ifndef __SLEEP_MODE_UTILITY_H__
 #define __SLEEP_MODE_UTILITY_H__
-#include "led_menager.h"
+#include "led_manager.h"
 #include "button_manager.h"
 
 /**
