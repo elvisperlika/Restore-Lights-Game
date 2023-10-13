@@ -26,7 +26,7 @@ unsigned long T1 = THREE_SECONDS;
 unsigned long sleepModeTime = TEN_SECONDS;
 
 /// Variable used on not blocking delays
-int prevTime = 0;
+unsigned long prevTime = 0;
 
 /// State of the MC phase, true if still have to light up some leds, false otherwise
 bool ledsTurningOn = true;

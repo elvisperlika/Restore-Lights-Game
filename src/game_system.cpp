@@ -9,10 +9,10 @@ const float DECREASE_RATES[] = {0.05, 0.07, 0.09, 0.11};
 const float e = 2.7182818284;
 
 /// Initial leds turning off time in milliseconds
-const unsigned int INITIAL_T2 = 3000;
+const unsigned long INITIAL_T2 = 3000;
 
 /// Initial time Player have to finish the level on easiest difficulty in milliseconds
-const unsigned int INITIAL_T3 = 10000;
+const unsigned long INITIAL_T3 = 10000;
 
 // Variables value related to the current session
 int currentT2;
@@ -63,9 +63,9 @@ void levelPassed() {
 
 /// @brief Execute the game over steps
 /// @param points: number of levels that the player passed
-void gameOver(int points){
+void gameOver(int points) {
     Serial.println(points);
-    int startingTime = millis();
+    unsigned long startingTime = millis();
     //arduino led fade from light on to light off over 10 sec
     analogWrite(RED_LED, 255);
     for (; millis() - startingTime < 10000;) {
