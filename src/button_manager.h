@@ -5,6 +5,8 @@
 #define BUTTON3 10
 #define BUTTON4 11
 
+extern const uint8_t buttons[];
+
 /// @brief Initialize buttons as input.
 void buttonsInit();
 
@@ -21,6 +23,6 @@ void deactivateButtonsGameInterrupt();
 /// @brief Check if has been pressed the correct button.
 /// @param buttonPin button pin to check.
 /// @return true if the button was correct, false if it was wrong.
-bool buttonPressed(int buttonPin);
+bool buttonPressed(uint8_t buttonPin);
 
 #endif

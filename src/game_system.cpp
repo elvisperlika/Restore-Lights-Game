@@ -16,10 +16,10 @@ const unsigned long INITIAL_T2 = 3000UL;
 const unsigned long INITIAL_T3 = 10000UL;
 
 // Variables value related to the current session
-int currentT2;
-int currentT3;
+unsigned long currentT2;
+unsigned long currentT3;
 int currentLevel;
-int currentDifficulty;
+uint8_t currentDifficulty;
 
 /// @brief Apply a formula that follow an'exponential decrese of the time
 /// @param initialValue: starting value 
@@ -34,7 +34,7 @@ float ApplyDecreasingFormula(float initialValue, float decreaseRatio, int level)
 /// @param level: current level.
 /// @param difficulty: current difficulty.
 /// @return the new T2.
-float CalculateT2(int level, int difficulty) {
+float CalculateT2(int level, uint8_t difficulty) {
   return ApplyDecreasingFormula(INITIAL_T2, DECREASE_RATES[difficulty], level);
 }
 
@@ -42,13 +42,13 @@ float CalculateT2(int level, int difficulty) {
 /// @param level: current level.
 /// @param difficulty: current difficulty.
 /// @return the new T3.
-float CalculateT3(int level, int difficulty) {
+float CalculateT3(int level, uint8_t difficulty) {
   return ApplyDecreasingFormula(INITIAL_T3, DECREASE_RATES[difficulty], level);
 }
 
 /// @brief Initialize the game variables
 /// @param difficulty: current game difficulty.
-void gameInit(int difficulty) {
+void gameInit(uint8_t difficulty) {
   currentLevel = 0;
   currentDifficulty = difficulty;
   currentT2 = CalculateT2(currentLevel, difficulty);

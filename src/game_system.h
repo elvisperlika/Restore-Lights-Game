@@ -16,33 +16,33 @@ enum GameState {
 
 /// Initial leds turning off time and the session related variable
 extern const unsigned long INITIAL_T2;
-extern int currentT2;
+extern unsigned long currentT2;
 
 /// Initial time Player have to finish the level on easiest difficulty, and the serrion related variable
 extern const unsigned long INITIAL_T3;
-extern int currentT3;
+extern unsigned long currentT3;
 
 /// Current Player level
 extern int currentLevel;
 
 /// Current game difficulty
-extern int currentDifficulty;
+extern uint8_t currentDifficulty;
 
 /// @brief Calculate the value of T2 of the given level.
 /// @param level: current level.
 /// @param difficulty: current difficulty.
 /// @return the new T2.
-float CalculateT2(int level, int difficulty);
+float CalculateT2(int level, uint8_t difficulty);
 
 /// @brief Calculate the value of T3 of the given level.
 /// @param level: current level.
 /// @param difficulty: current difficulty.
 /// @return the new T3.
-float CalculateT3(int level, int difficulty);
+float CalculateT3(int level, uint8_t difficulty);
 
 /// @brief Initialize the game variables
 /// @param difficulty: current game difficulty.
-void gameInit(int difficulty);
+void gameInit(uint8_t difficulty);
 
 /// @brief Called when current level is passed
 void levelPassed();

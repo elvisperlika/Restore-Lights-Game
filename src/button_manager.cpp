@@ -2,10 +2,10 @@
 #include "button_manager.h"
 #include "game_system.h"
 
-const int buttons[] = {BUTTON1, BUTTON2, BUTTON3, BUTTON4};
+const uint8_t buttons[] = {BUTTON1, BUTTON2, BUTTON3, BUTTON4};
 
 /// Button pressed index, used to know how many button still need to press, to finish the game 
-int buttonPressedIndex;
+int8_t buttonPressedIndex;
 
 /// @brief Function to attach to button 1
 void buttonPressed1() {
@@ -59,7 +59,7 @@ void deactivateButtonsGameInterrupt() {
 /// @brief Check if has been pressed the correct button.
 /// @param buttonPin button pin to check.
 /// @return true if the button was correct, false if it was wrong.
-bool buttonPressed(int buttonPin) {    
+bool buttonPressed(uint8_t buttonPin) {    
     if (buttonPin != buttons[buttonPressedIndex]) {
         return false;
     }
