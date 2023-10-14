@@ -10,10 +10,10 @@ const float DECREASE_RATES[] = {0.05, 0.07, 0.09, 0.11};
 const float e = 2.7182818284;
 
 /// Initial leds turning off time in milliseconds
-const unsigned long INITIAL_T2 = 3000;
+const unsigned long INITIAL_T2 = 3000UL;
 
 /// Initial time Player have to finish the level on easiest difficulty in milliseconds
-const unsigned long INITIAL_T3 = 10000;
+const unsigned long INITIAL_T3 = 10000UL;
 
 // Variables value related to the current session
 int currentT2;

@@ -7,6 +7,26 @@ const int buttons[] = {BUTTON1, BUTTON2, BUTTON3, BUTTON4};
 /// Button pressed index, used to know how many button still need to press, to finish the game 
 int buttonPressedIndex;
 
+/// @brief Function to attach to button 1
+void buttonPressed1() {
+    buttonPressed(BUTTON1);
+}
+
+/// @brief Function to attach to button 2
+void buttonPressed2() {
+    buttonPressed(BUTTON2);
+}
+
+/// @brief Function to attach to button 3
+void buttonPressed3() {
+    buttonPressed(BUTTON3);
+}
+
+/// @brief Function to attach to button 4
+void buttonPressed4() {
+    buttonPressed(BUTTON4);
+}
+
 /// @brief Initialize buttons as input.
 void buttonsInit() {
     for (int i = 0; i < getButtonsNumber(); i++) {
@@ -46,24 +66,4 @@ bool buttonPressed(int buttonPin) {
     
     buttonPressedIndex++;
     return true;
-}
-
-/// @brief Function to attach to button 1
-void buttonPressed1() {
-    buttonPressed(BUTTON1);
-}
-
-/// @brief Function to attach to button 2
-void buttonPressed2() {
-    buttonPressed(BUTTON2);
-}
-
-/// @brief Function to attach to button 3
-void buttonPressed3() {
-    buttonPressed(BUTTON3);
-}
-
-/// @brief Function to attach to button 4
-void buttonPressed4() {
-    buttonPressed(BUTTON4);
 }

@@ -15,11 +15,11 @@ enum GameState {
 };
 
 /// Initial leds turning off time and the session related variable
-extern const unsigned int INITIAL_T2;
+extern const unsigned long INITIAL_T2;
 extern int currentT2;
 
 /// Initial time Player have to finish the level on easiest difficulty, and the serrion related variable
-extern const unsigned int INITIAL_T3;
+extern const unsigned long INITIAL_T3;
 extern int currentT3;
 
 /// Current Player level

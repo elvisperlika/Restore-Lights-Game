@@ -34,6 +34,11 @@ unsigned long prevTime = 0;
 /// State of the MC phase, true if still have to light up some leds, false otherwise
 bool ledsTurningOn = true;
 
+int getDifficulty() {
+    int potValue = analogRead(POTENTIOMETER_PIN);
+    return map(potValue, 0, 1023, 1, 3);
+}
+
 void setup() {
     sleepModeStartTime = millis();
     Serial.begin(9600);
@@ -143,10 +148,4 @@ void sleepNowTrampoline() {
 
 void setGameOver() {
     gameState = GAMEOVER;
-}
-
-
-int getDifficulty() {
-    int potValue = analogRead(POTENTIOMETER_PIN);
-    return map(potValue, 0, 1023, 1, 3);
 }
