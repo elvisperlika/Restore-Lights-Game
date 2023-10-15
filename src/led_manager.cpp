@@ -10,13 +10,28 @@ int currIntensity = 0;
 
 /// @brief Getter of the total number of green leds
 /// @return the number of green leds
-int getGreenLedsNumber() {
+uint8_t getGreenLeds() {
     return sizeof(greenLeds) / sizeof(greenLeds[0]);
+}
+
+/// @brief Getter of the total number of green leds turned on
+/// @return the number of green leds turned on
+uint8_t getGreenLedsOn() {
+    uint8_t counter = 0;
+
+    for (int i = 0; i < getGreenLeds(); i++)
+    {
+        if (digitalRead(greenLeds[i]) == HIGH) {
+            counter++;
+        }
+    }
+
+    return counter;
 }
 
 /// @brief Initialize green and red led's pins on OUTPUT
 void ledsInit() {
-    for (int i = 0; i < getGreenLedsNumber(); i++)
+    for (int i = 0; i < getGreenLeds(); i++)
     {
         pinMode(greenLeds[i], OUTPUT);
     }
@@ -27,7 +42,7 @@ void ledsInit() {
 /// @brief Switch all the leds on or off
 /// @param state: true to switch on, false to switch off
 void switchGreenLeds(bool state) {
-    for (int i = 0; i < getGreenLedsNumber(); i++) {
+    for (int i = 0; i < getGreenLeds(); i++) {
         digitalWrite(greenLeds[i], state == true ? HIGH : LOW);
     }
 }

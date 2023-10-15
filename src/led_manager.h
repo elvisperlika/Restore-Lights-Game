@@ -14,7 +14,11 @@
 
 /// @brief Getter of the total number of green leds
 /// @return the number of green leds
-int getGreenLedsNumber();
+uint8_t getGreenLeds();
+
+/// @brief Getter of the total number of green leds turned on
+/// @return the number of green leds turned on
+uint8_t getGreenLedsOn();
 
 /// @brief Initialize green and red led's pins on OUTPUT
 void ledsInit();
