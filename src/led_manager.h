@@ -32,10 +32,6 @@ void switchGreenLeds(bool state);
 /// @param state: true to switch on, false to switch off
 void switchLed(uint8_t ledPin, bool state);
 
-/// @brief Switch a random led on or off depending on the parameter
-/// @param state: if true, switch a random led on (that was off), if false switch a random led off (that was on)
-void switchRandomLed(bool state);
-
 /// @brief If the fading is activated the led will fade in and out else the led will be switched off
 /// @param ledPin pin of the led to switch on or off
 void ledFading(uint8_t ledPin);
