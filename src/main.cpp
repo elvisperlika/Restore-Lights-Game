@@ -55,16 +55,16 @@ void loop() {
     case LEDS_ON:
         basicTimer(T1, &switchOnGreenLedsStartTime, switchGreenLeds, true);
 
-        if (getGreenLeds() == getGreenLedsOn()) {
+        if (getGreenLedsNumber() == getGreenLedsOnNumber()) {
             gameState = LEDS_OFF;
         }
-        
+
         break;
     case LEDS_OFF:
         basicTimer(currentT2, &switchOffGreenLedStartTime, switchRandomLedOff);
 
         // Check if the MC phase is finished
-        if (getGreenLedsOn() == 0) {
+        if (getGreenLedsOnNumber() == 0) {
             //Initialize the PLAYER state
             activateButtonsGameInterrupt();
             gameOverStartTime = millis();
@@ -79,11 +79,14 @@ void loop() {
         /* this is one of the last function to launch in this state */
         basicTimer(currentT3, &gameOverStartTime, setGameOver);
         /* this is the last function to launch in this state */
-        deactivateButtonsGameInterrupt();
+        
         break;
     case NEWLEVEL:
+        // !! Update dei parametri di gioco T2, T3, "numCorrectButtons"
+        gameState = LEDS_ON;
         break;
     case GAMEOVER:
+        // !! Aggiungi il map al red led fade down 10s
         printFinalScore();
         ledFading(RED_LED);
         gameState = SETUP;
@@ -95,5 +98,6 @@ void loop() {
 
 /// @brief Set the game state to GAMEOVER (used with an iterrupt).
 void setGameOver() {
+    deactivateButtonsGameInterrupt();
     gameState = GAMEOVER;
 }

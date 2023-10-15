@@ -37,3 +37,10 @@ PRE-GAME:
 - settare il fattoriale F con il potenziometro (da eseguirsi nello stato di SETUP)
 - vettore di Decrease-Rate di 4 elemeni, viene estratto un elemento in base al livellod el potenziometro mappato 0-3
     -> testare se va mappato in 0-3 o 1-4
+
+TO-DO List pt2
+-Race condion
+-Bouncing pulsanti (new metodo Ricci)
+-Cambiare libreria bottoni
+
+- Check commenti nel main

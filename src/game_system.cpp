@@ -25,6 +25,9 @@ uint8_t ledsToSwitchOffLeft;
 // variable to keep track of the best score
 uint8_t bestScore = 0;
 
+// vector of order of the switched pins
+uint8_t* pinsOrder;
+
 /// @brief Apply a formula that follow an'exponential decrese of the time
 /// @param initialValue: starting value 
 /// @param decreaseRatio: the greater, the fastest the number goes down 
@@ -59,21 +62,23 @@ void gameInit(uint8_t difficulty) {
       currentT2 = CalculateT2(currentLevel, difficulty);
       currentT3 = CalculateT3(currentLevel, difficulty);
       ledsToSwitchOffLeft = 0;
+      pinsOrder = (uint8_t*)malloc(getGreenLedsNumber() * sizeof(uint8_t));
 }
 
 /// @brief switch a random led off (saving the order), do nothing if all leds are off
 void switchRandomLedOff () {
       //No leds to switch off
-      if (getGreenLedsOn() == 0) {
+      if (getGreenLedsOnNumber() == 0) {
           return;
       }
 
       //Set one random pin on LOW state
-      uint8_t randomPin = random(getGreenLeds());
-      while (digitalRead(randomPin) == LOW) {
-        randomPin = random(getGreenLeds());
+      uint8_t randomPin = random(getGreenLedsNumber());
+      while (digitalRead(greenLeds[randomPin]) == LOW) {
+        randomPin = random(getGreenLedsNumber());
       }
-      digitalWrite(randomPin, LOW);
+      digitalWrite(greenLeds[randomPin], LOW);
+      pinsOrder[ledsToSwitchOffLeft++] = greenLeds[randomPin];
 }
 
 /// @brief Called when current level is passed

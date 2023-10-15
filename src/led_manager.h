@@ -12,13 +12,15 @@
 /// Define red led pin (must be a PWM pin)
 #define RED_LED 9
 
+extern const uint8_t greenLeds[];
+
 /// @brief Getter of the total number of green leds
 /// @return the number of green leds
-uint8_t getGreenLeds();
+uint8_t getGreenLedsNumber();
 
 /// @brief Getter of the total number of green leds turned on
 /// @return the number of green leds turned on
-uint8_t getGreenLedsOn();
+uint8_t getGreenLedsOnNumber();
 
 /// @brief Initialize green and red led's pins on OUTPUT
 void ledsInit();
