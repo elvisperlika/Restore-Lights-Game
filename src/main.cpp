@@ -43,7 +43,7 @@ void loop() {
 
         break;
     case INITIALIZATION:
-        basicTimer(sleepModeTime, &sleepModeStartTime, sleepNowTrampoline);
+        basicTimer(sleepModeTime, &sleepModeStartTime, prepareSleep);
         
         if (digitalRead(BUTTON1) == HIGH) {
             switchOnGreenLedsStartTime = millis();
@@ -85,7 +85,7 @@ void loop() {
         break;
     case GAMEOVER:
         printFinalScore();
-        gameOver();
+        ledFading(RED_LED);
         gameState = SETUP;
         break;
     default:
@@ -100,6 +100,7 @@ void sleepNowTrampoline() {
     sleepNow();
 }
 
+/// @brief Set the game state to GAMEOVER (used with an iterrupt).
 void setGameOver() {
     gameState = GAMEOVER;
 }

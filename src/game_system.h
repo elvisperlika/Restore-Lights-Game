@@ -56,6 +56,3 @@ void levelPassed();
 
 /// @brief Print the final score
 void printFinalScore();
-
-/// @brief Execute the game over steps
-void gameOver();
