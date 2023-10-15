@@ -12,3 +12,8 @@ int getDifficulty() {
     int potValue = analogRead(POTENTIOMETER_PIN);
     return map(potValue, 0, 1023, 1, 3);
 }
+
+/// @brief Initialize potentiometer's pin
+void potentiometerInit() {
+    pinMode(POTENTIOMETER_PIN, INPUT);
+}

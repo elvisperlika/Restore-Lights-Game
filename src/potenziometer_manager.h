@@ -9,3 +9,6 @@ extern unsigned long T1;
 /// @brief Get the selected difficulty by reading the value from the potentiometer
 /// @return the selected difficulty
 int getDifficulty();
+
+/// @brief Initialize potentiometer's pin
+void potentiometerInit();

@@ -25,7 +25,9 @@ unsigned long prevTime = 0;
 bool ledsTurningOn = true;
 
 void setup() {
-    // !! ADD PIN INITIALIZATION
+    ledsInit();
+    buttonsInit();
+    potentiometerInit();
     Serial.begin(9600);
 }
 
