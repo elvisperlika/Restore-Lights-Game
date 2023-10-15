@@ -9,9 +9,6 @@
 /// Define the current state of the game
 GameState gameState = SETUP;
 
-/// Used to print setup message only one time a game
-bool printSetupMessage = true;
-
 /// Variables managing timers for events
 unsigned long sleepModeStartTime;
 unsigned long switchOnGreenLedsStartTime;
@@ -28,7 +25,7 @@ unsigned long prevTime = 0;
 bool ledsTurningOn = true;
 
 void setup() {
-    sleepModeStartTime = millis();
+    // !! ADD PIN INITIALIZATION
     Serial.begin(9600);
 }
 
@@ -36,23 +33,22 @@ void loop() {
     switch (gameState)
     {
     case SETUP:
-        if (printSetupMessage) {
-            Serial.println("Welcome to the Restore the Light Game. Press Key B1 to Start");
-            switchGreenLeds(false);
-            ledFading(RED_LED);
-            printSetupMessage = false;
-        }
+        Serial.println("Welcome to the Restore the Light Game. Press Key B1 to Start");
+        switchGreenLeds(false);
+        ledFading(RED_LED);
+        sleepModeStartTime = millis();
+        gameState = INITIALIZATION;
 
+        break;
+    case INITIALIZATION:
         basicTimer(sleepModeTime, &sleepModeStartTime, sleepNowTrampoline);
         
         if (digitalRead(BUTTON1) == HIGH) {
             switchOnGreenLedsStartTime = millis();
             gameInit(getDifficulty());
-            gameState = LEDS_ON;
             Serial.println("GO!");
+            gameState = LEDS_ON;
         }
-        break;
-    case INITIALIZATION:
         break;
     case LEDS_ON:
         basicTimer(T1, &switchOnGreenLedsStartTime, switchGreenLeds, true);
@@ -89,7 +85,6 @@ void loop() {
         printFinalScore();
         gameOver();
         gameState = SETUP;
-        printSetupMessage = true;
         break;
     default:
         break;
