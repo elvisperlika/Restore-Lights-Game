@@ -3,6 +3,15 @@
 #include <avr/power.h>
 #include "time_utility.h"
 #include "button_manager.h"
+#include "led_manager.h"
+
+/// @brief Setup the environement for the deep sleep, then enter deep sleep
+void prepareSleep() {
+    Serial.println("Sleep mode actived");
+    switchGreenLeds(false);
+    switchLed(RED_LED, false);
+    sleepNow();
+}
 
 /// @brief Activate deep sleep mode and set the interrupt to wake up the system for each button
 void sleepNow() {

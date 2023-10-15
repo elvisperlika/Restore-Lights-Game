@@ -1,6 +1,9 @@
 #ifndef __SLEEP_MODE_UTILITY_H__
 #define __SLEEP_MODE_UTILITY_H__
 
+/// @brief Setup the environement for the deep sleep, then enter deep sleep
+void prepareSleep();
+
 /// @brief Activate deep sleep mode and set the interrupt to wake up the system for each button
 void sleepNow();
 

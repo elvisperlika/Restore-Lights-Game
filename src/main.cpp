@@ -93,13 +93,6 @@ void loop() {
     }
 }
 
-void sleepNowTrampoline() {
-    Serial.println("Sleep mode actived");
-    switchGreenLeds(false);
-    switchLed(RED_LED, false);
-    sleepNow();
-}
-
 /// @brief Set the game state to GAMEOVER (used with an iterrupt).
 void setGameOver() {
     gameState = GAMEOVER;
