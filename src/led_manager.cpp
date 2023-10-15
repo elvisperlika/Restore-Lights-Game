@@ -54,6 +54,37 @@ void switchLed(uint8_t ledPin, bool state) {
     digitalWrite(ledPin, state == true ? HIGH : LOW);
 }
 
+/// @brief Switch a random led on or off depending on the parameter
+/// @param state: if true, switch a random led on (that was off), if false switch a random led off (that was on)
+void switchRandomLed(bool state) {
+
+    if (state) {
+        //No leds to switch on
+        if (getGreenLedsOn() == getGreenLeds()){
+            return;
+        }
+
+        //Set one random pin on LOW state
+        uint8_t randomPin = random(getGreenLeds());
+        while (digitalRead(randomPin) == LOW) {
+            randomPin = random(getGreenLeds());
+        }
+        digitalWrite(randomPin, LOW);
+    } else {
+        //No leds to switch off
+        if (getGreenLedsOn() == 0) {
+            return;
+        }
+
+        //Set one random pin on HIGH state
+        uint8_t randomPin = random(getGreenLeds());
+        while (digitalRead(randomPin) == HIGH) {
+            randomPin = random(getGreenLeds());
+        }
+        digitalWrite(randomPin, HIGH);
+    }
+}
+
 /// @brief If the fading is activated the led will fade in and out else the led will be switched off
 /// @param ledPin pin of the led to switch on or off
 void ledFading(uint8_t ledPin) {
