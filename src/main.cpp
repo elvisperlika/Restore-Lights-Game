@@ -2,42 +2,30 @@
 #include "main.h"
 #include "game_system.h"
 #include "led_manager.h"
-#include "sleep_mode_utility.h"
+#include "time_utility.h"
 #include "button_manager.h"
-
-const uint8_t POTENTIOMETER_PIN = A0;
-
-
-bool printSetupMessage = true;
+#include "potenziometer_manager.h"
 
 /// Define the current state of the game
 GameState gameState = SETUP;
 
+/// Used to print setup message only one time a game
+bool printSetupMessage = true;
+
 /// Variables managing timers for events
 unsigned long sleepModeStartTime;
-unsigned long switchGreenLedsStartTime;
+unsigned long switchOnGreenLedsStartTime;
+unsigned long switchOffGreenLedStartTime;
 unsigned long gameOverStartTime;
 
-/**
- * T1 is the time after which the green led switch on.
-*/
-unsigned long T1 = THREE_SECONDS;
-
-/**
- * Player have 10s to start the game or the system go in deep sleep mode.
-*/
-unsigned long sleepModeTime = TEN_SECONDS;
+/// Player have 10s to start the game or the system go in deep sleep mode
+const unsigned long sleepModeTime = 10000;
 
 /// Variable used on not blocking delays
 unsigned long prevTime = 0;
 
 /// State of the MC phase, true if still have to light up some leds, false otherwise
 bool ledsTurningOn = true;
-
-int getDifficulty() {
-    int potValue = analogRead(POTENTIOMETER_PIN);
-    return map(potValue, 0, 1023, 1, 3);
-}
 
 void setup() {
     sleepModeStartTime = millis();
@@ -50,51 +38,41 @@ void loop() {
     case SETUP:
         if (printSetupMessage) {
             Serial.println("Welcome to the Restore the Light Game. Press Key B1 to Start");
+            switchGreenLeds(false);
+            ledFading(RED_LED);
             printSetupMessage = false;
         }
-        switchGreenLeds(false);
-        ledFading(RED_LED);
-        basicTimer(TEN_SECONDS, &sleepModeStartTime, sleepNowTrampoline);
-        /* this initialization must bo done before changing state in MC */
-        switchGreenLedsStartTime = millis();
+
+        basicTimer(sleepModeTime, &sleepModeStartTime, sleepNowTrampoline);
         
         if (digitalRead(BUTTON1) == HIGH) {
-            currentDifficulty = getDifficulty();
-            gameInit(currentDifficulty);
-            gameState = MC;
+            switchOnGreenLedsStartTime = millis();
+            gameInit(getDifficulty());
+            gameState = LEDS_ON;
             Serial.println("GO!");
         }
         break;
-    case MC:
-        // Two separate phases, when leds are turing on, and when are turning off one by one
-        if (ledsTurningOn) {
-            basicTimer(T1, &switchGreenLedsStartTime, switchGreenLeds, true);
-            ledsTurningOn = false;
-            prevTime = millis();
-        } else {
-            if (millis() - prevTime >= currentT2) {                
-                
-                // Check if the MC phase is finished
-                if (getGreenLedsNumber() == 0) {
-                    gameState = PLAYER;
-                    break;
-                }
-                
-                //Set one random pin on LOW state
-                uint8_t randomPin = random(getGreenLedsNumber());
-                while (digitalRead(randomPin) == LOW) {
-                    randomPin = random(getGreenLedsNumber());
-                }
-                digitalWrite(randomPin, LOW);
-            }
-            
-            /* this is one of the last function to launch in this state */
-            activateButtonsGameInterrupt();
-        /* this initialization must bo done before changing state in PLAYER */
-        gameOverStartTime = millis();
+    case INITIALIZATION:
+        break;
+    case LEDS_ON:
+        basicTimer(T1, &switchOnGreenLedsStartTime, switchGreenLeds, true);
+
+        if (getGreenLeds() == getGreenLedsOn()) {
+            gameState = LEDS_OFF;
         }
-        // prevTime reset for the next cycle
-        prevTime = millis();    
+        
+        break;
+    case LEDS_OFF:
+        basicTimer(currentT2, &switchOffGreenLedStartTime, switchRandomLedOff);
+
+        // Check if the MC phase is finished
+        if (getGreenLedsOn() == 0) {
+            //Initialize the PLAYER state
+            activateButtonsGameInterrupt();
+            gameOverStartTime = millis();
+            //Change to PLAYER state            
+            gameState = PLAYER;
+        }
 
         break;
     case PLAYER:
@@ -108,34 +86,13 @@ void loop() {
     case NEWLEVEL:
         break;
     case GAMEOVER:
-        gameOver(currentLevel);
+        printFinalScore();
+        gameOver();
         gameState = SETUP;
         printSetupMessage = true;
         break;
     default:
         break;
-    }
-}
-/// @brief Call a function if enough time passed
-/// @param limitTime is the time after which the function is launched
-/// @param startTime is a pointer to a variable representing the start time
-/// @param function function to launch
-void basicTimer(unsigned long limitTime, unsigned long *startTime, void (*function)()) {
-    if (millis() - *startTime >= limitTime) {
-        function();
-        *startTime = millis();
-    }
-}
-
-/// @brief Call a function if enough time passed
-/// @param limitTime is the time after which the function is launched
-/// @param startTime is a pointer to a variable representing the start time
-/// @param function function to launch
-/// @param s is the function's parameter
-void basicTimer(unsigned long limitTime, unsigned long *startTime, void (*function)(bool), bool s) {
-    if (millis() - *startTime >= limitTime) {
-        function(s);
-        *startTime = millis();
     }
 }
 
