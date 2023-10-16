@@ -100,6 +100,8 @@ void loop() {
         if(checkWinLose() == 4){
             points++; //The player won so points++
             checkWin = true; //Set the boolean true
+        } else {
+            gameState = GAMEOVER;
         }
         /* this is one of the last function to launch in this state */
         basicTimer(T3, gameOverStartTime, setGameOver, true);
