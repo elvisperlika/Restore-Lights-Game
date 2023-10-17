@@ -1,11 +1,14 @@
 #ifndef __BUTTON_MANAGER_H__
 #define __BUTTON_MANAGER_H__
-#define BUTTON1 2
-#define BUTTON2 3
-#define BUTTON3 10
-#define BUTTON4 11
 
-extern const uint8_t buttons[];
+#include "Arduino.h"
+
+#define BUTTON1 9
+#define BUTTON2 10
+#define BUTTON3 11
+#define BUTTON4 12
+
+extern const int8_t buttons[];
 
 /// @brief Initialize buttons as input.
 void buttonsInit();
@@ -23,6 +26,8 @@ void deactivateButtonsGameInterrupt();
 /// @brief Check if has been pressed the correct button.
 /// @param buttonPin button pin to check.
 /// @return true if the button was correct, false if it was wrong.
-bool buttonPressed(uint8_t buttonPin);
+bool buttonPressed(int8_t buttonPin);
+
+void isr_handler();
 
 #endif

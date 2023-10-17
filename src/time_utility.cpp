@@ -1,37 +1,29 @@
-#include <Arduino.h>
-#include <avr/sleep.h>
-#include <avr/power.h>
 #include "time_utility.h"
-#include "button_manager.h"
-#include "led_manager.h"
 
-/// @brief Setup the environement for the deep sleep, then enter deep sleep
-void prepareSleep() {
-    Serial.println("Sleep mode actived");
-    switchGreenLeds(false);
-    switchLed(RED_LED, false);
-    sleepNow();
-}
+#include <avr/sleep.h>
+#include <EnableInterrupt.h>
 
 /// @brief Activate deep sleep mode and set the interrupt to wake up the system for each button
 void sleepNow() {
     set_sleep_mode(SLEEP_MODE_PWR_DOWN);
     sleep_enable();
     
-    for (int i = 0; i < getButtonsNumber(); i++) {
-        attachInterrupt(digitalPinToInterrupt(buttons[i]), wakeUpNow, RISING);
+    for (int i = 0; i < 5; i++) {
+        //enableInterrupt(buttons[i], wakeUpNow, HIGH);
     }    
     
     sleep_mode();
-
     sleep_disable();    
-    for (int i = 0; i < getButtonsNumber(); i++) {
-        detachInterrupt(digitalPinToInterrupt(buttons[i]));
+
+    for (int i = 0; i < 5; i++) {
+        //disableInterrupt(buttons[i]);
     }
 }
 
 /// @brief Empty function for wake up interrupt
-void wakeUpNow(){};
+void wakeUpNow(){
+    Serial.println("Wake up");
+};
 
 /// @brief Call a function if enough time passed
 /// @param limitTime is the time after which the function is launched

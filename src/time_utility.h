@@ -1,6 +1,8 @@
 #ifndef __SLEEP_MODE_UTILITY_H__
 #define __SLEEP_MODE_UTILITY_H__
 
+#include "Arduino.h" 
+
 /// @brief Setup the environement for the deep sleep, then enter deep sleep
 void prepareSleep();
 

@@ -1,4 +1,5 @@
-#include <Arduino.h>
+#ifndef __POTENTIOMETER_MANAGER_H__
+#define __POTENTIOMETER_MANAGER_H__
 
 /// Define potentiometer pin
 extern const uint8_t POTENTIOMETER_PIN;
@@ -12,3 +13,5 @@ int getDifficulty();
 
 /// @brief Initialize potentiometer's pin
 void potentiometerInit();
+
+#endif

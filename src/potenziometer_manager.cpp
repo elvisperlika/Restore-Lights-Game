@@ -1,3 +1,4 @@
+#include <Arduino.h>
 #include "potenziometer_manager.h"
 
 /// Define potentiometer pin

@@ -1,3 +1,6 @@
+#ifndef __GAME_SYSTEM_H__
+#define __GAME_SYSTEM_H__
+
 /**
  * Game states.
  * SETUP: executed only one time at the beginning of every new game to reset variables
@@ -56,3 +59,5 @@ void levelPassed();
 
 /// @brief Print the final score
 void printFinalScore();
+
+#endif

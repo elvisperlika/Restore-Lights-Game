@@ -25,6 +25,13 @@ unsigned long prevTime = 0;
 /// State of the MC phase, true if still have to light up some leds, false otherwise
 bool ledsTurningOn = true;
 
+void sleep() {
+    Serial.println("Sleep mode actived");
+    switchGreenLeds(false);
+    switchLed(RED_LED, false);
+    sleepNow();
+}
+
 void setup() {
     ledsInit();
     buttonsInit();
@@ -45,7 +52,7 @@ void loop() {
 
         break;
     case INITIALIZATION:
-        basicTimer(sleepModeTime, &sleepModeStartTime, prepareSleep);
+        basicTimer(sleepModeTime, &sleepModeStartTime, sleep);
         
         if (digitalRead(BUTTON1) == HIGH) {
             switchOnGreenLedsStartTime = millis();

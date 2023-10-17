@@ -1,5 +1,3 @@
-#include "Arduino.h"
-
 #ifndef __LED_BOARD__
 #define __LED_BOARD__
 
