@@ -6,6 +6,7 @@
 #include "button_manager.h"
 #include "potenziometer_manager.h"
 
+
 /// Define the current state of the game
 GameState gameState = SETUP;
 
@@ -37,6 +38,7 @@ void loop() {
     case SETUP:
         Serial.println("Welcome to the Restore the Light Game. Press Key B1 to Start");
         switchGreenLeds(false);
+
         ledFading(RED_LED);
         sleepModeStartTime = millis();
         gameState = INITIALIZATION;
@@ -51,6 +53,7 @@ void loop() {
             Serial.println("GO!");
             gameState = LEDS_ON;
         }
+
         break;
     case LEDS_ON:
         basicTimer(T1, &switchOnGreenLedsStartTime, switchGreenLeds, true);
