@@ -5,32 +5,24 @@
 #define BUTTON3 10
 #define BUTTON4 11
 
-/**
- * Initialize buttons as input.
-*/
-void button_init_input();
+extern const uint8_t buttons[];
 
-/**
- * Buttons number getter.
-*/
+/// @brief Initialize buttons as input.
+void buttonsInit();
+
+/// @brief Buttons number getter.
+/// @return the number of buttons.
 int getButtonsNumber();
 
-/**
- * Activate buttons interrupt util to game.
- * Set the variable 'bp' to -1.
-*/
+/// @brief Attach interrupts to each button.
 void activateButtonsGameInterrupt();
 
-/**
- * Check if is the correct button to press.
- * @param buttonPin button pin to check.
-*/
-void buttonPressed(int buttonPin);
-
-/**
- * Deactivate buttons interrupt util to game.
-*/
+/// @brief Detach interrupts from each button.
 void deactivateButtonsGameInterrupt();
 
+/// @brief Check if has been pressed the correct button.
+/// @param buttonPin button pin to check.
+/// @return true if the button was correct, false if it was wrong.
+bool buttonPressed(uint8_t buttonPin);
 
 #endif
