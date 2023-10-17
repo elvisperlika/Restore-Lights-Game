@@ -6,18 +6,21 @@
 #include "button_manager.h"
 #include "potenziometer_manager.h"
 
-
 /// Define the current state of the game
 GameState gameState = SETUP;
 
+/// Is the time after which the green led switch on
+unsigned long T1_TIME = 0;
+unsigned long T2_TIME = 0;
+unsigned long T3_TIME = 0;
+
+/// Player have 10s to start the game or the system go in deep sleep mode
+const unsigned long sleepModeTime = 10000;
 /// Variables managing timers for events
 unsigned long sleepModeStartTime;
 unsigned long switchOnGreenLedsStartTime;
 unsigned long switchOffGreenLedStartTime;
 unsigned long gameOverStartTime;
-
-/// Player have 10s to start the game or the system go in deep sleep mode
-const unsigned long sleepModeTime = 10000;
 
 /// Variable used on not blocking delays
 unsigned long prevTime = 0;
@@ -25,7 +28,7 @@ unsigned long prevTime = 0;
 /// State of the MC phase, true if still have to light up some leds, false otherwise
 bool ledsTurningOn = true;
 
-void sleep() {
+void goToSleep() {
     Serial.println("Sleep mode actived");
     switchGreenLeds(false);
     switchLed(RED_LED, false);
@@ -51,25 +54,23 @@ void loop() {
 
         break;
     case INITIALIZATION:
-        basicTimer(sleepModeTime, &sleepModeStartTime, sleep);
+        basicTimer(sleepModeTime, &sleepModeStartTime, goToSleep);
         
         if (digitalRead(BUTTON1) == HIGH) {
             switchOnGreenLedsStartTime = millis();
             gameInit(getDifficulty());
             Serial.println("GO!");
-            gameState = LEDS_ON;
+            gameState = SWITCH_ON_ALL_LEDS;
         }
 
         break;
-    case LEDS_ON:
-        basicTimer(T1, &switchOnGreenLedsStartTime, switchGreenLeds, true);
-
-        if (getGreenLedsNumber() == getGreenLedsOnNumber()) {
-            gameState = LEDS_OFF;
+    case SWITCH_ON_ALL_LEDS:
+        if (millis() - switchOnGreenLedsStartTime >= T1_TIME) {
+            switchGreenLeds(true);
+            gameState = SWITCH_OFF_LEDS_RANDOMLY;
         }
-
         break;
-    case LEDS_OFF:
+    case SWITCH_OFF_LEDS_RANDOMLY:
         basicTimer(currentT2, &switchOffGreenLedStartTime, switchRandomLedOff);
 
         // Check if the MC phase is finished
@@ -92,7 +93,7 @@ void loop() {
         break;
     case NEWLEVEL:
         // !! Update dei parametri di gioco T2, T3, "numCorrectButtons"
-        gameState = LEDS_ON;
+        gameState = SWITCH_ON_ALL_LEDS;
         break;
     case GAMEOVER:
         // !! Aggiungi il map al red led fade down 10s

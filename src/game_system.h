@@ -14,8 +14,8 @@
 enum GameState {
     SETUP,
     INITIALIZATION,
-    LEDS_ON,
-    LEDS_OFF,
+    SWITCH_ON_ALL_LEDS,
+    SWITCH_OFF_LEDS_RANDOMLY,
     PLAYER,
     NEWLEVEL,
     GAMEOVER
@@ -59,5 +59,10 @@ void levelPassed();
 
 /// @brief Print the final score
 void printFinalScore();
+
+/**
+ * Change the game state.
+*/
+void changeState(GameState &gameState, GameState newState);
 
 #endif

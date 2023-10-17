@@ -27,33 +27,18 @@ uint8_t bestScore = 0;
 // vector of order of the switched pins
 uint8_t* pinsOrder;
 
-/// @brief Apply a formula that follow an'exponential decrese of the time
-/// @param initialValue: starting value 
-/// @param decreaseRatio: the greater, the fastest the number goes down 
-/// @param level: starting from 0, more level means less time, less level more time
-/// @return
 float ApplyDecreasingFormula(float initialValue, float decreaseRatio, uint8_t level) {
      return initialValue * pow(e, -decreaseRatio * level);
 }
 
-/// @brief Calculate the value of T2 of the given level.
-/// @param level: current level.
-/// @param difficulty: current difficulty.
-/// @return the new T2.
 float CalculateT2(uint8_t level, uint8_t difficulty) {
      return ApplyDecreasingFormula(INITIAL_T2, DECREASE_RATES[difficulty], level);
 }
 
-/// @brief Calculate the value of T3 of the given level.
-/// @param level: current level.
-/// @param difficulty: current difficulty.
-/// @return the new T3.
 float CalculateT3(uint8_t level, uint8_t difficulty) {
      return ApplyDecreasingFormula(INITIAL_T3, DECREASE_RATES[difficulty], level);
 }
 
-/// @brief Initialize the game variables
-/// @param difficulty: current game difficulty.
 void gameInit(uint8_t difficulty) {
       currentLevel = 0;
       bestScore = 0;
@@ -64,14 +49,7 @@ void gameInit(uint8_t difficulty) {
       pinsOrder = (uint8_t*)malloc(getGreenLedsNumber() * sizeof(uint8_t));
 }
 
-/// @brief switch a random led off (saving the order), do nothing if all leds are off
 void switchRandomLedOff () {
-      //No leds to switch off
-      if (getGreenLedsOnNumber() == 0) {
-          return;
-      }
-
-      //Set one random pin on LOW state
       uint8_t randomPin = random(getGreenLedsNumber());
       while (digitalRead(greenLeds[randomPin]) == LOW) {
         randomPin = random(getGreenLedsNumber());
@@ -80,14 +58,12 @@ void switchRandomLedOff () {
       pinsOrder[ledsToSwitchOffLeft++] = greenLeds[randomPin];
 }
 
-/// @brief Called when current level is passed
 void levelPassed() {
     currentLevel++;
     currentT2 = CalculateT2(currentLevel, currentDifficulty);
     currentT3 = CalculateT3(currentLevel, currentDifficulty);
 }
 
-/// @brief Print the final score
 void printFinalScore() {
     Serial.print("Game Over. Final Score: ");
     Serial.println(currentLevel);
@@ -96,4 +72,8 @@ void printFinalScore() {
         bestScore = currentLevel;
         Serial.println("NEW BEST SCORE!");
     }
+}
+
+void changeState(GameState &gameState, GameState newState) {
+    gameState = newState;
 }
