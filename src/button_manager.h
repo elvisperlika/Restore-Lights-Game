@@ -28,6 +28,14 @@ void deactivateButtonsGameInterrupt();
 /// @return true if the button was correct, false if it was wrong.
 bool buttonPressed(int8_t buttonPin);
 
-void isr_handler();
+/// @brief Check if the interrupt is probably due to a bouncing problem
+/// @return true if there are no bouncing problem, false if is probably bouncing
+bool checkBouncing();
+
+/// @brief Activate deep sleep mode and set the interrupt to wake up the system for each button
+void sleepNow();
+
+/// @brief Empty function for wake up interrupt
+void wakeUpNow();
 
 #endif

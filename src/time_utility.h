@@ -3,15 +3,6 @@
 
 #include "Arduino.h" 
 
-/// @brief Setup the environement for the deep sleep, then enter deep sleep
-void prepareSleep();
-
-/// @brief Activate deep sleep mode and set the interrupt to wake up the system for each button
-void sleepNow();
-
-/// @brief Empty function for wake up interrupt
-void wakeUpNow();
-
 /// @brief Call a function if enough time passed
 /// @param limitTime is the time after which the function is launched
 /// @param startTime is a pointer to a variable representing the start time

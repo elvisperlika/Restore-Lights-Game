@@ -45,7 +45,6 @@ void loop() {
     case SETUP:
         Serial.println("Welcome to the Restore the Light Game. Press Key B1 to Start");
         switchGreenLeds(false);
-
         ledFading(RED_LED);
         sleepModeStartTime = millis();
         gameState = INITIALIZATION;

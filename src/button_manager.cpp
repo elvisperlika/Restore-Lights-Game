@@ -1,5 +1,6 @@
 #include "Arduino.h"
 #include "button_manager.h"
+#include <avr/sleep.h>
 
 #include <EnableInterrupt.h>
 
@@ -47,7 +48,10 @@ int getButtonsNumber() {
 /// @brief Attach interrupts to each button.
 void activateButtonsGameInterrupt() {
     buttonPressedIndex = -1;
-    enableInterrupt(BUTTON1, isr_handler, RISING);
+    enableInterrupt(BUTTON1, buttonPressed1, RISING);
+    enableInterrupt(BUTTON2, buttonPressed2, RISING);
+    enableInterrupt(BUTTON3, buttonPressed3, RISING);
+    enableInterrupt(BUTTON4, buttonPressed4, RISING);
 }
 
 /// @brief Detach interrupts from each button.
@@ -61,20 +65,39 @@ void deactivateButtonsGameInterrupt() {
 /// @param buttonPin button pin to check.
 /// @return true if the button was correct, false if it was wrong.
 bool buttonPressed(int8_t buttonPin) {    
-    if (buttonPin != buttons[buttonPressedIndex]) {
+    //TO-TO
+    return false;
+}
+
+/// @brief Check if the interrupt is probably due to a bouncing problem
+/// @return true if there are no bouncing problem, false if is probably bouncing
+bool checkBouncing() {
+    unsigned long interrupt_time = millis();
+
+    if (interrupt_time - last_interrupt_time > DEBOUNCE_DELAY) {
         return false;
     }
-    
-    buttonPressedIndex++;
+
+    last_interrupt_time = interrupt_time;
     return true;
 }
 
-void isr_handler() {
-  uint32_t interrupt_time = millis();
+/// @brief Activate deep sleep mode and set the interrupt to wake up the system for each button
+void sleepNow() {
+    set_sleep_mode(SLEEP_MODE_PWR_DOWN);
+    sleep_enable();
+    
+    for (int i = 0; i < getButtonsNumber(); i++) {
+        enableInterrupt(buttons[i], wakeUpNow, HIGH);
+    }    
+    
+    sleep_mode();
+    sleep_disable();    
 
-  if (interrupt_time - last_interrupt_time > DEBOUNCE_DELAY) {
-    led_status = !led_status;
-  }
-
-  last_interrupt_time = interrupt_time;
+    for (int i = 0; i < getButtonsNumber(); i++) {
+        disableInterrupt(buttons[i]);
+    }
 }
+
+/// @brief Empty function for wake up interrupt
+void wakeUpNow(){};
