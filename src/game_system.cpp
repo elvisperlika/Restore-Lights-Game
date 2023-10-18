@@ -54,15 +54,7 @@ float CalculateT3(uint8_t level, uint8_t difficulty) {
 
 /// @brief Initialize the game variables
 /// @param difficulty: current game difficulty.
-void gameInit(uint8_t difficulty) {
-      currentLevel = 0;
-      bestScore = 0;
-      currentDifficulty = difficulty;
-      currentT2 = CalculateT2(currentLevel, difficulty);
-      currentT3 = CalculateT3(currentLevel, difficulty);
-      ledsToSwitchOffLeft = 0;
-      pinsOrder = (uint8_t*)malloc(getGreenLedsNumber() * sizeof(uint8_t));
-}
+
 
 /// @brief switch a random led off (saving the order), do nothing if all leds are off
 void switchRandomLedOff () {

@@ -1,10 +1,7 @@
 #include <Arduino.h>
 #include "main.h"
-#include "game_system.h"
-#include "led_manager.h"
+#include "game_engine.h"
 #include "time_utility.h"
-#include "button_manager.h"
-#include "potenziometer_manager.h"
 
 
 /// Define the current state of the game
@@ -25,17 +22,8 @@ unsigned long prevTime = 0;
 /// State of the MC phase, true if still have to light up some leds, false otherwise
 bool ledsTurningOn = true;
 
-void sleep() {
-    Serial.println("Sleep mode actived");
-    switchGreenLeds(false);
-    switchLed(RED_LED, false);
-    sleepNow();
-}
-
 void setup() {
-    ledsInit();
-    buttonsInit();
-    potentiometerInit();
+    boardInit();
     Serial.begin(9600);
 }
 
@@ -43,40 +31,34 @@ void loop() {
     switch (gameState)
     {
     case SETUP:
-        Serial.println("Welcome to the Restore the Light Game. Press Key B1 to Start");
-        switchGreenLeds(false);
-        ledFading(RED_LED);
-        sleepModeStartTime = millis();
+        gameSetup();
         gameState = INITIALIZATION;
-
         break;
     case INITIALIZATION:
-        basicTimer(sleepModeTime, &sleepModeStartTime, sleep);
-        
-        if (digitalRead(BUTTON1) == HIGH) {
-            switchOnGreenLedsStartTime = millis();
-            gameInit(getDifficulty());
-            Serial.println("GO!");
+        basicTimer(sleepModeTime, &sleepModeStartTime, sleepMode);
+        if (checkStartGame()) {
+            gameInit();
+            T1_StartTime = millis();
             gameState = LEDS_ON;
         }
 
         break;
     case LEDS_ON:
-        basicTimer(T1, &switchOnGreenLedsStartTime, switchGreenLeds, true);
-
-        if (getGreenLedsNumber() == getGreenLedsOnNumber()) {
+        basicTimer(T1_TIME, &T1_StartTime, ledsOn, true);
+        if (checkLedsOn()) {
+            T2_StartTime = millis();
             gameState = LEDS_OFF;
         }
 
         break;
     case LEDS_OFF:
-        basicTimer(currentT2, &switchOffGreenLedStartTime, switchRandomLedOff);
+        basicTimer(T2_TIME, &T2_StartTime, disableRandomLed);
 
         // Check if the MC phase is finished
-        if (getGreenLedsOnNumber() == 0) {
+        if (checkPatternCreated()) {
             //Initialize the PLAYER state
-            activateButtonsGameInterrupt();
-            gameOverStartTime = millis();
+            activateGameControls();
+            T3_StartTime = millis();
             //Change to PLAYER state            
             gameState = PLAYER;
         }
@@ -86,20 +68,23 @@ void loop() {
         /* here check if the player pressed wrong button */
         /* here check if the player win the game */
         /* this is one of the last function to launch in this state */
-        basicTimer(currentT3, &gameOverStartTime, setGameOver);
+        basicTimer(T3_TIME, &T3_StartTime, setGameOver);
         /* this is the last function to launch in this state */
+        gameState = checkGameStatus();
         
         break;
     case NEWLEVEL:
-        // !! "numCorrectButtons"
         levelPassed();
         gameState = LEDS_ON;
         break;
+    case GAMESCORE:
+        showGameScore();
+        gameState = GAMEOVER;
+        break;
     case GAMEOVER:
         // !! Aggiungi il map al red led fade down 10s
-        printFinalScore();
-        ledFading(RED_LED);
-        gameState = SETUP;
+        basicTimer(10SEC, &Time, resetGame());
+        showGameOverAllert();
         break;
     default:
         break;
