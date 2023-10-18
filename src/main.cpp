@@ -91,7 +91,8 @@ void loop() {
         
         break;
     case NEWLEVEL:
-        // !! Update dei parametri di gioco T2, T3, "numCorrectButtons"
+        // !! "numCorrectButtons"
+        levelPassed();
         gameState = LEDS_ON;
         break;
     case GAMEOVER:
