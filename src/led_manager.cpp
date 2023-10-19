@@ -53,7 +53,7 @@ void ledFading(uint8_t ledPin) {
     }
 }
 
-int switchRandomLedOff() {
+uint8_t switchRandomLedOff() {
     uint8_t rand = random(getGreenLedsNumber());
     while (digitalRead(greenLeds[rand]) == LOW) {
     rand = random(getGreenLedsNumber());

@@ -8,12 +8,16 @@
 
 /// Array of each decrease rate for each difficulty.
 const float DECREASE_RATES[] = {0.05, 0.07, 0.09, 0.11};
-static int currentLevel;
-static int bestScore; 
 
+/// Current Player level (score) and best player's score
+static int currentLevel;
+static int bestScore;
+
+/// TO DOCUMENT (flags 🤢)
 bool ledsOnFlag = false;
 int i = 0;
 
+/// Led's id turning off order ~~~~~~
 uint8_t ledsOff[] = {0, 0, 0, 0};
 
 void boardInit() {
@@ -27,35 +31,25 @@ void gameSetup() {
     SleepMode_StartTime = millis();
 }
 
-void gameInit() {
-    switchLed(RED_LED, false);
-    currentLevel = 0;
-    bestScore = 0;
-    levelInit(getDifficulty());
-}
-
 void initializationAllert() {
     ledFading(RED_LED);
-}
-
-void showGameOverAllert() {
-    ledFading(RED_LED);
-}
-
-void sleepMode() {
-    Serial.println("Sleep mode actived");
-    delay(100);
-    switchLed(RED_LED, false);
-    sleepNow();
 }
 
 bool checkStartGame() {
     return digitalRead(BUTTON1) == HIGH ? true : false;
 }
 
-void levelInit(uint8_t difficulty) {
+static void levelInit(uint8_t difficulty) {
     T2_TIME = CalculateNewT(INITIAL_T2, DECREASE_RATES[difficulty], currentLevel);
     T3_TIME = CalculateNewT(INITIAL_T3, DECREASE_RATES[difficulty], currentLevel);
+    i = getButtonsNumber() - 1;
+}
+
+void gameInit() {
+    switchLed(RED_LED, false);
+    currentLevel = 0;
+    bestScore = 0;
+    levelInit(getDifficulty());
 }
 
 void ledsOn(bool s) {
@@ -71,7 +65,15 @@ bool checkLedsOn() {
 
 void disableRandomLed() {
     ledsOff[i] = switchRandomLedOff();
-    i++;
+    i--;
+}
+
+bool checkPatternCreated() {
+    // TO DO
+}
+
+void activateGameControls() {
+    activateButtonsGameInterrupt();
 }
 
 GameState checkGameStatus() {
@@ -84,17 +86,36 @@ GameState checkGameStatus() {
 }
 
 void levelPassed() {
-    /* TODO */
+    currentLevel++;
+    //note: is possible to change game difficulty runtime
+    levelInit(getDifficulty());
 }
 
 void showGameScore() {
-    /* TODO */
+    Serial.print("Game Over. Final Score: ");
+    Serial.println(currentLevel);
+
+    if (currentLevel > bestScore) {
+        bestScore = currentLevel;
+        Serial.println("NEW BEST SCORE!");
+    }
+}
+
+void showGameOverAllert() {
+    ledFading(RED_LED);
 }
 
 void deactivateGameControls() {
     deactivateButtonsGameInterrupt();
 }
 
-void activateGameControls() {
-    activateButtonsGameInterrupt();
+void sleepMode() {
+    Serial.println("Sleep mode actived");
+    delay(100);
+    switchLed(RED_LED, false);
+    sleepNow();
 }
+
+
+
+

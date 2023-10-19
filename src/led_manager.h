@@ -37,8 +37,8 @@ void switchLed(uint8_t ledPin, bool state);
 void ledFading(uint8_t ledPin);
 
 /**
- * Switch a random led on.
+ * Switch a random led off.
 */
-int switchRandomLedOff();
+uint8_t switchRandomLedOff();
 
 #endif

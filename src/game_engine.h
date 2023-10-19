@@ -8,9 +8,11 @@
 extern unsigned long T1_TIME;
 extern unsigned long T1_StartTime; 
 
+/// Initial leds turning off time and the session related variable
 extern unsigned long T2_TIME;
 extern unsigned long T2_StartTime;
 
+/// Initial time Player have to finish the level on easiest difficulty, and the serrion related variable
 extern unsigned long T3_TIME;
 extern unsigned long T3_StartTime;
 
@@ -20,21 +22,27 @@ extern unsigned long ResetGame_StartTime;
 extern unsigned long SleepMode_TIME = 10000;
 extern unsigned long SleepMode_StartTime;
 
+/**
+ * Game states.
+ * SETUP: executed only one time at the beginning of every new game to reset variables
+ * INITIALIZATION: waiting phase: 10s -> sleep mode or/and interrupt -> start game
+ * LEDS_ON: turning on of all leds and waiting 
+ * LEDS_OFF: randomly switch off of every led
+ * PLAYER: Player have to switch on leds in T3 time in the opposite order of swithcing off.
+ * NEW_LEVEL: Player win the level and start a new one whit less time to play.
+ * GAMESCORE: Show the final score of the current game.
+ * GAMEOVER: Player lose the game and the system show the score.
+*/
 enum GameState {
     SETUP,
     INITIALIZATION,
     LEDS_ON,
     LEDS_OFF,
     PLAYER,
-    NEWLEVEL,
+    NEW_LEVEL,
     GAMESCORE,
     GAMEOVER
 };
-
-/**
- * Show the Welcome message.
-*/
-void gameSetup();
 
 /**
  * Initialize all pins connected.
@@ -42,9 +50,19 @@ void gameSetup();
 void boardInit();
 
 /**
- * Initialize the game stats.
+ * Show the Welcome message.
 */
-void gameInit();
+void gameSetup();
+
+/**
+ * Show Initialization Game led allert. 
+*/
+void initializationAllert();
+
+/**
+ * Check if the player pushed the B1 button.
+*/
+bool checkStartGame();
 
 /**
  * 
@@ -52,14 +70,9 @@ void gameInit();
 void levelInit(uint8_t difficulty);
 
 /**
- * Set Arduino in Deep Sleep Mode.
+ * Initialize the game variables.
 */
-void sleepMode();
-
-/**
- * Check if the player pushed the B1 button.
-*/
-bool checkStartGame();
+void gameInit();
 
 /**
  * Switch the green leds on.
@@ -77,13 +90,6 @@ bool checkLedsOn();
 void disableRandomLed();
 
 /**
- * Check if the player lose the game.
- * @return NEWLEVEL if the player pressed the button
- *      in the correct order or GAMESCORE if the player push the wrong button. 
-*/
-GameState checkGameStatus();
-
-/**
  * Check if the pattern was created.
  * @return true if all leds are switched off. 
 */
@@ -93,19 +99,18 @@ bool checkPatternCreated();
  * Enable game's controls.
 */
 void activateGameControls();
-
 /**
- * Disable game's controls.
+ * Check if the player lose the game.
+ * @return NEW_LEVEL if the player pressed the button
+ *      in the correct order or GAMESCORE if the player push the wrong button. 
 */
-void deactivateGameControls();
+GameState checkGameStatus();
 
-/**
- * Set new level stats.
-*/
+/// @brief Initialize the new level, after completing the previous
 void levelPassed();
 
 /**
- * Show in Serial the new score and the bast score.
+ * Show in Serial the new score and the best score.
 */
 void showGameScore();
 
@@ -115,8 +120,13 @@ void showGameScore();
 void showGameOverAllert();
 
 /**
- * Show Initialization Game led allert. 
+ * Disable game's controls.
 */
-void initializationAllert();
+void deactivateGameControls();
+
+/**
+ * Set Arduino in Deep Sleep Mode.
+*/
+void sleepMode();
 
 #endif

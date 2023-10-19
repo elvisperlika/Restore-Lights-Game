@@ -56,7 +56,7 @@ void loop() {
         basicTimer(T3_TIME, &T3_StartTime, setGameOver);
         gameState = checkGameStatus();
         break;
-    case NEWLEVEL:
+    case NEW_LEVEL:
         levelPassed();
         gameState = LEDS_ON;
         break;

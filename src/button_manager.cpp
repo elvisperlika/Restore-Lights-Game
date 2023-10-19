@@ -8,7 +8,8 @@
 const int8_t buttons[] = {BUTTON1, BUTTON2, BUTTON3, BUTTON4};
 uint32_t last_interrupt_time = 0;
 uint8_t led_status = 0;
-int8_t pressedBtn[4] = {0, 0, 0, 0};
+// vector of order of the switched pins
+int8_t pressedBtn[4]; // !! rendilo dinamico con la malloc
 int8_t btnPressedCounter = 0;
 
 int8_t buttonPressedIndex;
