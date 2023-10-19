@@ -6,6 +6,9 @@
 #include <potenziometer_manager.h>
 
 bool ledsOnFlag = false;
+int i = 0;
+
+uint8_t ledsOff[4] = {0, 0, 0, 0};
 
 void boardInit() {
     ledsInit();
@@ -16,7 +19,7 @@ void boardInit() {
 void gameSetup() {
     Serial.println("Welcome to the Restore the Light Game. Press Key B1 to Start");
     ledFading(RED_LED);
-    sleepModeStartTime = millis();
+    SleepMode_StartTime = millis();
 }
 
 void gameInit() {
@@ -48,8 +51,8 @@ bool checkStartGame() {
 }
 
 void levelInit(uint8_t difficulty) {
-      T2_TIME = CalculateT2(currentLevel, difficulty);
-      T3_TIME = CalculateT3(currentLevel, difficulty);
+    T2_TIME = CalculateT2(currentLevel, difficulty);
+    T3_TIME = CalculateT3(currentLevel, difficulty);
 }
 
 void ledsOn(bool s) {
@@ -64,12 +67,17 @@ bool checkLedsOn() {
 }
 
 void disableRandomLed() {
-    ledButtonMap[i]->led = switchRandomLedOff();
+    ledsOff[i] = switchRandomLedOff();
     i++;
 }
 
 GameState checkGameStatus() {
-    /* TODO */
+    for (int j = 0; j < 4; j++) {
+        if (getPressedBtn()[j] != ledsOff[j]) {
+            return GAMEOVER;
+        }    
+    }
+    return PLAYER;
 }
 
 void levelPassed() {

@@ -2,13 +2,13 @@
 #define __LED_BOARD__
 
 /// Define green leds pins
-#define GREEN_LED1 4
-#define GREEN_LED2 5
-#define GREEN_LED3 6
-#define GREEN_LED4 7
+#define GREEN_LED1 2
+#define GREEN_LED2 3
+#define GREEN_LED3 4
+#define GREEN_LED4 5
 
 /// Define red led pin (must be a PWM pin)
-#define RED_LED 9
+#define RED_LED 6
 
 extern const uint8_t greenLeds[];
 
@@ -35,5 +35,10 @@ void switchLed(uint8_t ledPin, bool state);
 /// @brief If the fading is activated the led will fade in and out else the led will be switched off
 /// @param ledPin pin of the led to switch on or off
 void ledFading(uint8_t ledPin);
+
+/**
+ * Switch a random led on.
+*/
+int switchRandomLedOff();
 
 #endif

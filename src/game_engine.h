@@ -13,6 +13,9 @@ extern unsigned long T3_StartTime;
 extern unsigned long ResetGame_TIME = 10000;
 extern unsigned long ResetGame_StartTime;
 
+extern unsigned long SleepMode_TIME = 10000;
+extern unsigned long SleepMode_StartTime;
+
 enum GameState {
     SETUP,
     INITIALIZATION,
@@ -20,8 +23,8 @@ enum GameState {
     LEDS_OFF,
     PLAYER,
     NEWLEVEL,
-    GAMEOVER,
-    GAMESCORE
+    GAMESCORE,
+    GAMEOVER
 };
 
 void gameSetup();

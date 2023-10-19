@@ -3,24 +3,7 @@
 #include "game_engine.h"
 #include "time_utility.h"
 
-
-/// Define the current state of the game
 GameState gameState = SETUP;
-
-/// Variables managing timers for events
-unsigned long sleepModeStartTime;
-unsigned long switchOnGreenLedsStartTime;
-unsigned long switchOffGreenLedStartTime;
-unsigned long gameOverStartTime;
-
-/// Player have 10s to start the game or the system go in deep sleep mode
-const unsigned long sleepModeTime = 10000;
-
-/// Variable used on not blocking delays
-unsigned long prevTime = 0;
-
-/// State of the MC phase, true if still have to light up some leds, false otherwise
-bool ledsTurningOn = true;
 
 void setup() {
     boardInit();
@@ -35,7 +18,7 @@ void loop() {
         gameState = INITIALIZATION;
         break;
     case INITIALIZATION:
-        basicTimer(sleepModeTime, &sleepModeStartTime, sleepMode);
+        basicTimer(SleepMode_TIME, &SleepMode_StartTime, sleepMode);
         if (checkStartGame()) {
             gameInit();
             T1_StartTime = millis();
@@ -54,24 +37,16 @@ void loop() {
     case LEDS_OFF:
         basicTimer(T2_TIME, &T2_StartTime, disableRandomLed);
 
-        // Check if the MC phase is finished
         if (checkPatternCreated()) {
-            //Initialize the PLAYER state
             activateGameControls();
-            T3_StartTime = millis();
-            //Change to PLAYER state            
+            T3_StartTime = millis();            
             gameState = PLAYER;
         }
 
         break;
     case PLAYER:
-        /* here check if the player pressed wrong button */
-        /* here check if the player win the game */
-        /* this is one of the last function to launch in this state */
         basicTimer(T3_TIME, &T3_StartTime, setGameOver);
-        /* this is the last function to launch in this state */
         gameState = checkGameStatus();
-        
         break;
     case NEWLEVEL:
         levelPassed();
@@ -82,7 +57,6 @@ void loop() {
         gameState = GAMEOVER;
         break;
     case GAMEOVER:
-        // !! Aggiungi il map al red led fade down 10s
         basicTimer(ResetGame_TIME, &ResetGame_StartTime, resetGame);
         showGameOverAllert();
         break;

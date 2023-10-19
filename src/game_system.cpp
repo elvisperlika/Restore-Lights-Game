@@ -56,22 +56,6 @@ float CalculateT3(uint8_t level, uint8_t difficulty) {
 /// @param difficulty: current game difficulty.
 
 
-/// @brief switch a random led off (saving the order), do nothing if all leds are off
-void switchRandomLedOff () {
-      //No leds to switch off
-      if (getGreenLedsOnNumber() == 0) {
-          return;
-      }
-
-      //Set one random pin on LOW state
-      uint8_t randomPin = random(getGreenLedsNumber());
-      while (digitalRead(greenLeds[randomPin]) == LOW) {
-        randomPin = random(getGreenLedsNumber());
-      }
-      digitalWrite(greenLeds[randomPin], LOW);
-      pinsOrder[ledsToSwitchOffLeft++] = greenLeds[randomPin];
-}
-
 /// @brief Called when current level is passed
 void levelPassed() {
     currentLevel++;
