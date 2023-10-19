@@ -2,8 +2,13 @@
 #define __GAME_ENGINE_H_
 
 #include <stdint.h>
+
+#define INITIAL_T1 3000UL
 #define INITIAL_T2 3000UL
 #define INITIAL_T3 10000UL
+
+#define RESET_GAME_TIME 10000UL
+#define SLEEP_MODE_TIME 10000UL
 
 extern unsigned long T1_TIME;
 extern unsigned long T1_StartTime; 
@@ -16,10 +21,10 @@ extern unsigned long T2_StartTime;
 extern unsigned long T3_TIME;
 extern unsigned long T3_StartTime;
 
-extern unsigned long ResetGame_TIME = 10000;
+extern unsigned long ResetGame_TIME;
 extern unsigned long ResetGame_StartTime;
 
-extern unsigned long SleepMode_TIME = 10000;
+extern unsigned long SleepMode_TIME;
 extern unsigned long SleepMode_StartTime;
 
 /**
