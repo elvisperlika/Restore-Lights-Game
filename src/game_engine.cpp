@@ -91,3 +91,8 @@ void deactivateButtonsGameInterrupt() {
 void resetGame() {
     /* TODO */
 }
+
+void setGameOver() {
+    deactivateButtonsGameInterrupt();
+    gameState = GAMEOVER;
+}

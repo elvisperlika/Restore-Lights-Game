@@ -58,4 +58,6 @@ void deactivateButtonsGameInterrupt();
 
 void resetGame();
 
+void setGameOver();
+
 #endif

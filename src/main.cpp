@@ -83,16 +83,10 @@ void loop() {
         break;
     case GAMEOVER:
         // !! Aggiungi il map al red led fade down 10s
-        basicTimer(ResetGame_TIME, &ResetGame_StartTime, resetGame());
+        basicTimer(ResetGame_TIME, &ResetGame_StartTime, resetGame);
         showGameOverAllert();
         break;
     default:
         break;
     }
-}
-
-/// @brief Set the game state to GAMEOVER (used with an iterrupt).
-void setGameOver() {
-    deactivateButtonsGameInterrupt();
-    gameState = GAMEOVER;
 }
