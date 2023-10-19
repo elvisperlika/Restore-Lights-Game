@@ -5,6 +5,8 @@
 #include <led_manager.h>
 #include <potenziometer_manager.h>
 
+bool ledsOnFlag = false;
+
 void boardInit() {
     ledsInit();
     buttonsInit();
@@ -23,12 +25,6 @@ void gameInit() {
     currentDifficulty = getDifficulty();
     levelInit(currentDifficulty);
 }
-
-void createPattern() {
-    switchGreenLeds(true);
-
-}
-
 
 void showGameOverAllert() {
     ledFading(RED_LED);
@@ -56,16 +52,42 @@ void levelInit(uint8_t difficulty) {
       T3_TIME = CalculateT3(currentLevel, difficulty);
 }
 
-void ledsOn() {
-    switchGreenLeds(true);
+void ledsOn(bool s) {
+    switchGreenLeds(s);
     ledsOnFlag = true;
 }
 
 bool checkLedsOn() {
-    return ledsOnFlag;
+    bool tmp = ledsOnFlag;
+    ledsOnFlag = false;
+    return tmp;
 }
 
 void disableRandomLed() {
     ledButtonMap[i]->led = switchRandomLedOff();
     i++;
+}
+
+GameState checkGameStatus() {
+    /* TODO */
+}
+
+void levelPassed() {
+    /* TODO */
+}
+
+void showGameScore() {
+    /* TODO */
+}
+
+void showGameOverAllert() {
+    /* TODO */
+}
+
+void deactivateButtonsGameInterrupt() {
+    /* TODO */
+}
+
+void resetGame() {
+    /* TODO */
 }

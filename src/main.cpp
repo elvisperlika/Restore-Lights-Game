@@ -83,7 +83,7 @@ void loop() {
         break;
     case GAMEOVER:
         // !! Aggiungi il map al red led fade down 10s
-        basicTimer(10SEC, &Time, resetGame());
+        basicTimer(ResetGame_TIME, &ResetGame_StartTime, resetGame());
         showGameOverAllert();
         break;
     default:

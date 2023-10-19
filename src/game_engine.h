@@ -1,6 +1,18 @@
 #ifndef __GAME_ENGINE_H__
 #define __GAME_ENGINE_H__
 
+extern unsigned long T1_TIME;
+extern unsigned long T1_StartTime; 
+
+extern unsigned long T2_TIME;
+extern unsigned long T2_StartTime;
+
+extern unsigned long T3_TIME;
+extern unsigned long T3_StartTime;
+
+extern unsigned long ResetGame_TIME = 10000;
+extern unsigned long ResetGame_StartTime;
+
 enum GameState {
     SETUP,
     INITIALIZATION,
@@ -8,7 +20,8 @@ enum GameState {
     LEDS_OFF,
     PLAYER,
     NEWLEVEL,
-    GAMEOVER
+    GAMEOVER,
+    GAMESCORE
 };
 
 void gameSetup();
@@ -23,10 +36,26 @@ void sleepMode();
 
 bool checkStartGame();
 
-void ledsOn();
+void ledsOn(bool s);
 
 bool checkLedsOn();
 
 void disableRandomLed();
+
+GameState checkGameStatus();
+
+bool checkPatternCreated();
+
+void activateGameControls();
+
+void levelPassed();
+
+void showGameScore();
+
+void showGameOverAllert();
+
+void deactivateButtonsGameInterrupt();
+
+void resetGame();
 
 #endif
