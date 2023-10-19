@@ -9,7 +9,7 @@ unsigned long T1 = 3000;
 
 /// @brief Get the selected difficulty by reading the value from the potentiometer
 /// @return the selected difficulty
-int getDifficulty() {
+uint8_t getDifficulty() {
     int potValue = analogRead(POTENTIOMETER_PIN);
     return map(potValue, 0, 1023, 1, 3);
 }

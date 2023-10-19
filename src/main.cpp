@@ -1,5 +1,4 @@
 #include <Arduino.h>
-#include "main.h"
 #include "game_engine.h"
 #include "time_utility.h"
 
@@ -8,6 +7,15 @@ GameState gameState = SETUP;
 void setup() {
     boardInit();
     Serial.begin(9600);
+}
+
+void resetGame() {
+    gameState = SETUP;
+}
+
+void setGameOver() {
+    deactivateGameControls();
+    gameState = GAMESCORE;
 }
 
 void loop() {
@@ -19,6 +27,7 @@ void loop() {
         break;
     case INITIALIZATION:
         basicTimer(SleepMode_TIME, &SleepMode_StartTime, sleepMode);
+        initializationAllert();
         if (checkStartGame()) {
             gameInit();
             T1_StartTime = millis();
@@ -36,7 +45,6 @@ void loop() {
         break;
     case LEDS_OFF:
         basicTimer(T2_TIME, &T2_StartTime, disableRandomLed);
-
         if (checkPatternCreated()) {
             activateGameControls();
             T3_StartTime = millis();            

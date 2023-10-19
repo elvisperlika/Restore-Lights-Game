@@ -9,7 +9,7 @@ const int8_t buttons[] = {BUTTON1, BUTTON2, BUTTON3, BUTTON4};
 uint32_t last_interrupt_time = 0;
 uint8_t led_status = 0;
 int8_t pressedBtn[4] = {0, 0, 0, 0};
-int8_t i = 0;
+int8_t btnPressedCounter = 0;
 
 int8_t buttonPressedIndex;
 
@@ -55,8 +55,8 @@ void deactivateButtonsGameInterrupt() {
 
 void buttonPressed(int8_t btnIndex) {    
     if (checkBouncing()) {
-        pressedBtn[i] = btnIndex;
-        i++;
+        pressedBtn[btnPressedCounter] = btnIndex;
+        btnPressedCounter++;
     }
 }
 

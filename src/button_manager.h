@@ -9,6 +9,7 @@
 #define BUTTON4 10
 
 extern const int8_t buttons[];
+extern int8_t btnPressedCounter;
 
 /// @brief Initialize buttons as input.
 void buttonsInit();
@@ -34,7 +35,9 @@ bool checkBouncing();
 /// @brief Activate deep sleep mode and set the interrupt to wake up the system for each button
 void sleepNow();
 
-/// @brief Empty function for wake up interrupt
+/**
+ * Empty function for wake up interrupt
+*/ 
 void wakeUpNow();
 
 /**

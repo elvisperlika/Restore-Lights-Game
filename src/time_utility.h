@@ -16,4 +16,10 @@ void basicTimer(unsigned long limitTime, unsigned long *startTime, void (*functi
 /// @param s is the function's parameter
 void basicTimer(unsigned long limitTime, unsigned long *startTime, void (*function)(bool), bool s);
 
+/// @brief Apply a formula that follow an'exponential decrese to calculate new level's time
+/// @param initialT: starting T value 
+/// @param decreaseRatio: the greater it is, the fastest the number goes down 
+/// @param level: starting from 0, more level means less time, less level more time
+/// @return the new time
+float CalculateNewT(unsigned long initialT, float decreaseRatio, uint8_t level);
 #endif
