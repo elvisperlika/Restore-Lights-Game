@@ -36,6 +36,11 @@ bool checkBouncing(uint8_t buttonIndex);
 /// @return the index of the last pressed button.
 int8_t getLastButtonPressedIndex();
 
+/// @brief Get the Pin of the button co
+/// @param index 
+/// @return 
+uint8_t getButtonPin(uint8_t index);
+
 /// @brief Activate deep sleep mode and set the interrupt to wake up the system for each button.
 void sleepNow();
 

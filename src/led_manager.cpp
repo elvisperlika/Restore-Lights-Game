@@ -44,6 +44,10 @@ void switchLed(uint8_t ledPin, bool state) {
     digitalWrite(ledPin, state == true ? HIGH : LOW);
 }
 
+void switchLedByIndex(uint8_t ledIndex, bool state) {
+    switchLed(greenLeds[ledIndex], state);
+}
+
 void ledFading(uint8_t ledPin) {
     analogWrite(ledPin, currIntensity);
     currIntensity += fadeAmount;
@@ -56,8 +60,8 @@ void ledFading(uint8_t ledPin) {
 uint8_t switchRandomLedOff() {
     uint8_t rand = random(getGreenLedsNumber());
     while (digitalRead(greenLeds[rand]) == LOW) {
-    rand = random(getGreenLedsNumber());
+        rand = random(getGreenLedsNumber());
     }
     digitalWrite(greenLeds[rand], LOW);
-    return greenLeds[rand];
+    return rand;
 }

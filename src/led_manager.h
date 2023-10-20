@@ -12,32 +12,37 @@
 
 extern const uint8_t greenLeds[];
 
-/// @brief Getter of the total number of green leds
-/// @return the number of green leds
+/// @brief Getter of the total number of green leds.
+/// @return the number of green leds.
 uint8_t getGreenLedsNumber();
 
-/// @brief Getter of the total number of green leds turned on
-/// @return the number of green leds turned on
+/// @brief Getter of the total number of green leds turned on.
+/// @return the number of green leds turned on.
 uint8_t getGreenLedsOnNumber();
 
-/// @brief Initialize green and red led's pins on OUTPUT
+/// @brief Initialize green and red led's pins on OUTPUT.
 void ledsInit();
 
-/// @brief Switch all the leds on or off
-/// @param state: true to switch on, false to switch off
+/// @brief Switch all the leds on or off.
+/// @param state: true to switch on, false to switch off.
 void switchGreenLeds(bool state);
 
-/// @brief Switch on or off a single led
-/// @param ledPin: pin of the led to switch on or off
-/// @param state: true to switch on, false to switch off
+/// @brief Switch on or off a single led.
+/// @param ledPin: pin of the led to switch on or off.
+/// @param state: true to switch on, false to switch off.
 void switchLed(uint8_t ledPin, bool state);
 
-/// @brief If the fading is activated the led will fade in and out else the led will be switched off
-/// @param ledPin pin of the led to switch on or off
+/// @brief Switch on or off a single led.
+/// @param ledIndex Index of the led to switch.
+/// @param state true to switch on, false to switch off.
+void switchLedByIndex(uint8_t ledIndex, bool state);
+
+/// @brief If the fading is activated the led will fade in and out else the led will be switched off.
+/// @param ledPin pin of the led to switch on or off.
 void ledFading(uint8_t ledPin);
 
 /// @brief Switch a random led off.
-/// @return the pin of the switched led.
+/// @return the index of the switched led.
 uint8_t switchRandomLedOff();
 
 #endif

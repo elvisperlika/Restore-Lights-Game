@@ -101,27 +101,25 @@ bool checkPatternCreated() {
 
 void activateGameControls() {
     activateButtonsGameInterrupt();
+
+    for (int i=0; i<getButtonsNumber(); i++) {
+        Serial.print(ledsOffOrdered[i]);
+    }
 }
 
 GameState checkGameStatus() {
     int8_t lastButtonPressedIndex = getLastButtonPressedIndex();
-    
-    //Serial.print("PressedButton: ");
-    //Serial.println(lastButtonPressedIndex);
-    
     if (lastButtonPressedIndex != -1) {
+        currentLedId++;
         if (ledsOffOrdered[currentLedId] == lastButtonPressedIndex) {
-            digitalWrite(ledsOffOrdered[currentLedId], HIGH);
-
+            switchLedByIndex(ledsOffOrdered[currentLedId], true);
             if (currentLedId == getGreenLedsNumber() - 1) {
                 return NEW_LEVEL;
             }
         } else {
             return GAMESCORE;
-        }        
+        }
     }
-    
-    currentLedId++;
     return PLAYER;
 }
 
@@ -132,6 +130,8 @@ void levelPassed() {
 }
 
 void showGameScore() {
+    switchGreenLeds(false);
+
     Serial.print("Game Over. Final Score: ");
     Serial.println(currentLevel);
 
@@ -142,6 +142,7 @@ void showGameScore() {
 }
 
 void showGameOverAllert() {
+    switchGreenLeds(false);
     ledFading(RED_LED);
 }
 

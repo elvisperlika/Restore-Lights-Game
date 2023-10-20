@@ -5,16 +5,13 @@
 
 #include <EnableInterrupt.h>
 
-#define DEBOUNCE_DELAY 100 // in ms
+#define DEBOUNCE_DELAY 1500 // in ms
 
 /// Array of millisecs to keep track of the last interrupt call on each button
 unsigned long* lastInterruptTime;
 
 /// Array to map button's index to button's pin
 const uint8_t buttons[] = {BUTTON1, BUTTON2, BUTTON3, BUTTON4};
-
-/// Array of the buttons pressed pins to keep track of the pressed order
-uint8_t* pressedButtons;
 
 /// Index of the next button to press
 uint8_t buttonPressedIndex;
@@ -25,26 +22,18 @@ int8_t lastButtonPressedIndex;
 
 void buttonPressed1() {
     buttonPressed(0);
-    Serial.print(0);
-    delay(5000);
 }
 
 void buttonPressed2() {
     buttonPressed(1);
-    Serial.print(1);
-    delay(5000);
 }
 
 void buttonPressed3() {
     buttonPressed(2);
-    Serial.print(2);
-    delay(5000);
 }
 
 void buttonPressed4() {
     buttonPressed(3);
-    Serial.print(3);
-    delay(5000);
 }
 
 void buttonsInit() {
@@ -52,7 +41,6 @@ void buttonsInit() {
         pinMode(buttons[i], INPUT);
     }
 
-    pressedButtons = (uint8_t*)malloc(getButtonsNumber() * sizeof(uint8_t));
     lastInterruptTime = (unsigned long*)calloc(getButtonsNumber(), sizeof(unsigned long));
 }
 
