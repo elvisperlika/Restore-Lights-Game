@@ -50,7 +50,7 @@ void loop() {
         if (checkPatternCreated()) {
             Serial.println("Pattern created");
             activateGameControls();
-            T3_StartTime = millis();            
+            T3_StartTime = millis();
             gameState = PLAYER;
         }
 

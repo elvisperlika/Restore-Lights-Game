@@ -9,7 +9,6 @@
 #define BUTTON4 10
 
 extern const uint8_t buttons[];
-extern uint8_t buttonPressedCounter;
 
 /// @brief Initialize buttons as input.
 void buttonsInit();
@@ -33,19 +32,14 @@ void buttonPressed(uint8_t buttonIndex);
 /// @return true if there are no bouncing problem, false if is probably bouncing.
 bool checkBouncing(uint8_t buttonIndex);
 
+/// @brief Get the last pressed button.
+/// @return the index of the last pressed button.
+int8_t getLastButtonPressedIndex();
+
 /// @brief Activate deep sleep mode and set the interrupt to wake up the system for each button.
 void sleepNow();
 
 /// @brief Empty function to wake up from interrupt.
 void wakeUpNow();
-
-/// @brief Get the array of pressed buttons.
-/// @return the array of pressed buttons (each element is the ).
-uint8_t* getPressedButton();
-
-/**
- * Getter of the last pressed button.
-*/
-int8_t getPressedButton();
 
 #endif

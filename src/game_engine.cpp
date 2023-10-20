@@ -15,10 +15,10 @@ static int bestScore;
 
 /// TO DOCUMENT (flags 🤢)
 bool ledsOnFlag = false;
-int currentLedId = 0;
 
-/// Led's id turning off order
-uint8_t* ledsOff;
+/// Array containing the order of the leds switched off
+uint8_t* ledsOffOrdered;
+int currentLedId;
 
 /// Defining time vaiables
 /// Time passed after pressing B1 and before turning all green leds on
@@ -44,7 +44,7 @@ void boardInit() {
     buttonsInit();
     potentiometerInit();
 
-    ledsOff = (uint8_t*)calloc(getGreenLedsNumber() * sizeof(uint8_t));
+    ledsOffOrdered = (uint8_t*)calloc(getGreenLedsNumber(), sizeof(uint8_t));
 }
 
 void gameSetup() {
@@ -64,7 +64,7 @@ void levelInit(uint8_t difficulty) {
     T1_TIME = INITIAL_T1;
     T2_TIME = CalculateNewT(INITIAL_T2, DECREASE_RATES[difficulty], currentLevel);
     T3_TIME = CalculateNewT(INITIAL_T3, DECREASE_RATES[difficulty], currentLevel);
-    currentLedId = getButtonsNumber() - 1;
+    currentLedId = getGreenLedsNumber() - 1;
 }
 
 void gameInit() {
@@ -91,13 +91,12 @@ void disableRandomLed() {
 }
 
 bool checkPatternCreated() {
-    // TO DO
+    // note: the counter starts from getGreenLedsNumber and goes -1 for each led switched off
     if (currentLedId == -1)
     {
         return true;
     }
-    return false;
-    
+    return false;    
 }
 
 void activateGameControls() {
@@ -105,9 +104,24 @@ void activateGameControls() {
 }
 
 GameState checkGameStatus() {
-    Serial.print("PressedButton: ");
-    Serial.println(getPressedButton());
-    digitalWrite(getButtonsNumber(), HIGH);
+    int8_t lastButtonPressedIndex = getLastButtonPressedIndex();
+    
+    //Serial.print("PressedButton: ");
+    //Serial.println(lastButtonPressedIndex);
+    
+    if (lastButtonPressedIndex != -1) {
+        if (ledsOffOrdered[currentLedId] == lastButtonPressedIndex) {
+            digitalWrite(ledsOffOrdered[currentLedId], HIGH);
+
+            if (currentLedId == getGreenLedsNumber() - 1) {
+                return NEW_LEVEL;
+            }
+        } else {
+            return GAMESCORE;
+        }        
+    }
+    
+    currentLedId++;
     return PLAYER;
 }
 
@@ -141,7 +155,3 @@ void sleepMode() {
     switchLed(RED_LED, false);
     sleepNow();
 }
-
-
-
-

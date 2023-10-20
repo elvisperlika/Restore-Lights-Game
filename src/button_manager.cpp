@@ -7,91 +7,94 @@
 
 #define DEBOUNCE_DELAY 100 // in ms
 
-/// Array of millisecs to keep track of the last interrupt call on each btn
+/// Array of millisecs to keep track of the last interrupt call on each button
 unsigned long* lastInterruptTime;
 
-/// Array to map btn's index to btn's pin
-const uint8_t btns[] = {BUTTON1, BUTTON2, BUTTON3, BUTTON4};
+/// Array to map button's index to button's pin
+const uint8_t buttons[] = {BUTTON1, BUTTON2, BUTTON3, BUTTON4};
 
-/// Array of the btns pressed pins to keep track of the pressed order
-uint8_t* pressedBtns;
+/// Array of the buttons pressed pins to keep track of the pressed order
+uint8_t* pressedButtons;
 
-// Index of the next btn to press
-uint8_t btnPressedIndex;
+/// Index of the next button to press
+uint8_t buttonPressedIndex;
 uint8_t led_status = 0;
-/// Number of btn pressed
-uint8_t btnPressedCounter = 0;
 
-void btnPressed1() {
-    btnPressed(0);
+/// Number of button pressed
+int8_t lastButtonPressedIndex;
+
+void buttonPressed1() {
+    buttonPressed(0);
+    Serial.print(0);
+    delay(5000);
 }
 
-void btnPressed2() {
-    btnPressed(1);
+void buttonPressed2() {
+    buttonPressed(1);
+    Serial.print(1);
+    delay(5000);
 }
 
-void btnPressed3() {
-    btnPressed(2);
+void buttonPressed3() {
+    buttonPressed(2);
+    Serial.print(2);
+    delay(5000);
 }
 
-void btnPressed4() {
-    btnPressed(3);
+void buttonPressed4() {
+    buttonPressed(3);
+    Serial.print(3);
+    delay(5000);
 }
 
-void btnsInit() {
-    for (int i = 0; i < getBtnsNumber(); i++) {
-        pinMode(btns[i], INPUT);
+void buttonsInit() {
+    for (int i = 0; i < getButtonsNumber(); i++) {
+        pinMode(buttons[i], INPUT);
     }
 
-    lastInterruptTime = (unsigned long*)malloc(getBtnsNumber() * sizeof(unsigned long));
-    pressedBtns = (uint8_t*)malloc(getBtnsNumber() * sizeof(uint8_t));
+    pressedButtons = (uint8_t*)malloc(getButtonsNumber() * sizeof(uint8_t));
+    lastInterruptTime = (unsigned long*)calloc(getButtonsNumber(), sizeof(unsigned long));
 }
 
-int getBtnsNumber() {
-    return sizeof(btns) / sizeof(btns[0]);
+int getButtonsNumber() {
+    return sizeof(buttons) / sizeof(buttons[0]);
 }
 
-void activateBtnsGameInterrupt() {
-    pressedBtn = -1;
-    btnPressedIndex = -1;
-    enableInterrupt(BUTTON1, btnPressed1, RISING);
-    enableInterrupt(BUTTON2, btnPressed2, RISING);
-    enableInterrupt(BUTTON3, btnPressed3, RISING);
-    enableInterrupt(BUTTON4, btnPressed4, RISING);
+void activateButtonsGameInterrupt() {
+    lastButtonPressedIndex = -1;
+    enableInterrupt(BUTTON1, buttonPressed1, RISING);
+    enableInterrupt(BUTTON2, buttonPressed2, RISING);
+    enableInterrupt(BUTTON3, buttonPressed3, RISING);
+    enableInterrupt(BUTTON4, buttonPressed4, RISING);
 }
 
-void deactivateBtnsGameInterrupt() {
-    for (int i = 0; i < getBtnsNumber(); i++) {
-        disableInterrupt(btns[i]);
+void deactivateButtonsGameInterrupt() {
+    for (int i = 0; i < getButtonsNumber(); i++) {
+        disableInterrupt(buttons[i]);
     }
 }
 
-void btnPressed(int8_t btnIndex) {    
-    if (checkBouncing()) {
-        pressedBtn[btnPressedCounter] = btnIndex;
-        btnPressedCounter++;
+void buttonPressed(uint8_t buttonIndex) {
+    if (checkBouncing(buttonIndex)) {
+        lastButtonPressedIndex = buttonIndex;
     }
 }
 
-bool checkBouncing() {
-    unsigned long interruptTime = millis();
-    if (millis() - lastInterruptTime > DEBOUNCE_DELAY) {
-        return true;
-    }
-    lastInterruptTime = interruptTime;
-    return false;
-}
-
-int8_t* getPressedBtn() {
-    return pressedBtn;
+int8_t getLastButtonPressedIndex() {
+    int8_t lastButtonPressedIndexCopy = lastButtonPressedIndex;
+    lastButtonPressedIndex = -1;
+    return lastButtonPressedIndexCopy;
 }
 
 bool checkBouncing(uint8_t buttonIndex) {
     unsigned long interruptTime = millis();
-    if (interruptTime - lastInterruptTime[buttonIndex] > DEBOUNCE_DELAY) {
+
+    if (interruptTime - lastInterruptTime[buttonIndex] < DEBOUNCE_DELAY) {
         return false;
     }
+
     lastInterruptTime[buttonIndex] = interruptTime;
+
     return true;
 }
 
@@ -99,20 +102,16 @@ void sleepNow() {
     set_sleep_mode(SLEEP_MODE_PWR_DOWN);
     sleep_enable();
     
-    for (int i = 0; i < getBtnsNumber(); i++) {
-        enableInterrupt(btns[i], wakeUpNow, RISING);
+    for (int i = 0; i < getButtonsNumber(); i++) {
+        enableInterrupt(buttons[i], wakeUpNow, RISING);
     }    
     
     sleep_mode();
     sleep_disable();    
 
-    for (int i = 0; i < getBtnsNumber(); i++) {
-        disableInterrupt(btns[i]);
+    for (int i = 0; i < getButtonsNumber(); i++) {
+        disableInterrupt(buttons[i]);
     }
 }
 
 void wakeUpNow(){};
-
-int8_t getPressedBtn() {
-    return pressedBtn;
-}

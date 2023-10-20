@@ -36,9 +36,8 @@ void switchLed(uint8_t ledPin, bool state);
 /// @param ledPin pin of the led to switch on or off
 void ledFading(uint8_t ledPin);
 
-/**
- * Switch a random led off.
-*/
+/// @brief Switch a random led off.
+/// @return the pin of the switched led.
 uint8_t switchRandomLedOff();
 
 #endif

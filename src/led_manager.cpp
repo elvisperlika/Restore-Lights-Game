@@ -59,5 +59,5 @@ uint8_t switchRandomLedOff() {
     rand = random(getGreenLedsNumber());
     }
     digitalWrite(greenLeds[rand], LOW);
-    return rand;
+    return greenLeds[rand];
 }
