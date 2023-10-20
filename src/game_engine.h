@@ -3,8 +3,8 @@
 
 #include <stdint.h>
 
-#define INITIAL_T1 3000UL
-#define INITIAL_T2 3000UL
+#define INITIAL_T1 1000UL
+#define INITIAL_T2 1000UL
 #define INITIAL_T3 10000UL
 
 #define RESET_GAME_TIME 10000UL

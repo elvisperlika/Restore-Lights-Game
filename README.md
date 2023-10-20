@@ -39,8 +39,7 @@ PRE-GAME:
     -> testare se va mappato in 0-3 o 1-4
 
 TO-DO List pt2
--Race condion
--Bouncing pulsanti (new metodo Ricci)
--Cambiare libreria bottoni
-
-- Check commenti nel main
+- Race condion
+- Check docs
+- Fixare il gameplay -> controllo push pulsante corretto
+- Stampa la score

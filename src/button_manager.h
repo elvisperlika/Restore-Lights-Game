@@ -43,4 +43,9 @@ void wakeUpNow();
 /// @return the array of pressed buttons (each element is the ).
 uint8_t* getPressedButton();
 
+/**
+ * Getter of the last pressed button.
+*/
+int8_t getPressedButton();
+
 #endif

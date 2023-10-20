@@ -44,7 +44,7 @@ void boardInit() {
     buttonsInit();
     potentiometerInit();
 
-    ledsOff = (uint8_t*)malloc(getGreenLedsNumber() * sizeof(uint8_t));
+    ledsOff = (uint8_t*)calloc(getGreenLedsNumber() * sizeof(uint8_t));
 }
 
 void gameSetup() {
@@ -86,12 +86,18 @@ bool checkLedsOn() {
 }
 
 void disableRandomLed() {
-    ledsOff[currentLedId] = switchRandomLedOff();
+    ledsOffOrdered[currentLedId] = switchRandomLedOff();
     currentLedId--;
 }
 
 bool checkPatternCreated() {
     // TO DO
+    if (currentLedId == -1)
+    {
+        return true;
+    }
+    return false;
+    
 }
 
 void activateGameControls() {
@@ -99,11 +105,9 @@ void activateGameControls() {
 }
 
 GameState checkGameStatus() {
-    for (int j = 0; j < buttonPressedCounter; j++) {
-        if (getPressedButton()[j] != ledsOff[j]) {
-            return GAMEOVER;
-        }    
-    }
+    Serial.print("PressedButton: ");
+    Serial.println(getPressedButton());
+    digitalWrite(getButtonsNumber(), HIGH);
     return PLAYER;
 }
 
