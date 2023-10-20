@@ -5,14 +5,21 @@
 #include <EnableInterrupt.h>
 
 #define DEBOUNCE_DELAY 100 // in ms
-const int8_t buttons[] = {BUTTON1, BUTTON2, BUTTON3, BUTTON4};
-uint32_t last_interrupt_time = 0;
-uint8_t led_status = 0;
-// vector of order of the switched pins
-int8_t pressedBtn[4]; // !! rendilo dinamico con la malloc
-int8_t btnPressedCounter = 0;
 
-int8_t buttonPressedIndex;
+/// Array of millisecs to keep track of the last interrupt call on each button
+unsigned long* lastInterruptTime;
+
+/// Array to map button's index to button's pin
+const uint8_t buttons[] = {BUTTON1, BUTTON2, BUTTON3, BUTTON4};
+
+/// Array of the buttons pressed pins to keep track of the pressed order
+uint8_t* pressedButtons;
+
+// Index of the next button to press
+uint8_t buttonPressedIndex;
+
+/// Number of button pressed
+uint8_t buttonPressedCounter = 0;
 
 void buttonPressed1() {
     buttonPressed(1);
@@ -34,6 +41,9 @@ void buttonsInit() {
     for (int i = 0; i < getButtonsNumber(); i++) {
         pinMode(buttons[i], INPUT);
     }
+
+    lastInterruptTime = (unsigned long*)malloc(getButtonsNumber() * sizeof(unsigned long));
+    pressedButtons = (uint8_t*)malloc(getButtonsNumber() * sizeof(uint8_t));
 }
 
 int getButtonsNumber() {
@@ -54,24 +64,23 @@ void deactivateButtonsGameInterrupt() {
     }
 }
 
-void buttonPressed(int8_t btnIndex) {    
-    if (checkBouncing()) {
-        pressedBtn[btnPressedCounter] = btnIndex;
-        btnPressedCounter++;
+void buttonPressed(uint8_t buttonIndex) {    
+    if (checkBouncing(buttonIndex)) {
+        pressedButtons[buttonPressedCounter] = buttonIndex;
+        buttonPressedCounter++;
     }
 }
 
-
-int8_t* getPressedBtn() {
-    return pressedBtn;
+uint8_t* getPressedButton() {
+    return pressedButtons;
 }
 
-bool checkBouncing() {
-    unsigned long interrupt_time = millis();
-    if (interrupt_time - last_interrupt_time > DEBOUNCE_DELAY) {
+bool checkBouncing(uint8_t buttonIndex) {
+    unsigned long interruptTime = millis();
+    if (interruptTime - lastInterruptTime[buttonIndex] > DEBOUNCE_DELAY) {
         return false;
     }
-    last_interrupt_time = interrupt_time;
+    lastInterruptTime[buttonIndex] = interruptTime;
     return true;
 }
 

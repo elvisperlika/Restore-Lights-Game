@@ -70,12 +70,12 @@ void initializationAllert();
 bool checkStartGame();
 
 /**
- * 
+ * Initialize level variables.
 */
 void levelInit(uint8_t difficulty);
 
 /**
- * Initialize the game variables.
+ * Initialize the game settings.
 */
 void gameInit();
 

@@ -8,41 +8,39 @@
 #define BUTTON3 9
 #define BUTTON4 10
 
-extern const int8_t buttons[];
-extern int8_t btnPressedCounter;
+extern const uint8_t buttons[];
+extern uint8_t buttonPressedCounter;
 
 /// @brief Initialize buttons as input.
 void buttonsInit();
 
-/// @brief Buttons number getter.
+/// @brief Get the number of buttons.
 /// @return the number of buttons.
 int getButtonsNumber();
 
-/// @brief Attach interrupts to each button.
+/// @brief Attach a buttonPressed function as interrupt to each button.
 void activateButtonsGameInterrupt();
 
 /// @brief Detach interrupts from each button.
 void deactivateButtonsGameInterrupt();
 
 /// @brief Check if has been pressed the correct button.
-/// @param buttonPin button pin to check.
-void buttonPressed(int8_t buttonPin);
+/// @param buttonIndex index of the button to check.
+void buttonPressed(uint8_t buttonIndex);
 
-/// @brief Check if the interrupt is probably due to a bouncing problem
-/// @return true if there are no bouncing problem, false if is probably bouncing
-bool checkBouncing();
+/// @brief Check if the interrupt is probably due to a bouncing problem.
+/// @param btnId Index of the button to check the bouncing on.
+/// @return true if there are no bouncing problem, false if is probably bouncing.
+bool checkBouncing(uint8_t buttonIndex);
 
-/// @brief Activate deep sleep mode and set the interrupt to wake up the system for each button
+/// @brief Activate deep sleep mode and set the interrupt to wake up the system for each button.
 void sleepNow();
 
-/**
- * Empty function for wake up interrupt
-*/ 
+/// @brief Empty function to wake up from interrupt.
 void wakeUpNow();
 
-/**
- * Pressed button array getter.
-*/
-int8_t* getPressedBtn();
+/// @brief Get the array of pressed buttons.
+/// @return the array of pressed buttons (each element is the ).
+uint8_t* getPressedButton();
 
 #endif

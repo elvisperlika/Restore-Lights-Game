@@ -17,8 +17,8 @@ static int bestScore;
 bool ledsOnFlag = false;
 int currentLedId = 0;
 
-/// Led's id turning off order ~~~~~~
-uint8_t ledsOff[] = {0, 0, 0, 0};
+/// Led's id turning off order
+uint8_t* ledsOff;
 
 /// Defining time vaiables
 /// Time passed after pressing B1 and before turning all green leds on
@@ -43,6 +43,8 @@ void boardInit() {
     ledsInit();
     buttonsInit();
     potentiometerInit();
+
+    ledsOff = (uint8_t*)malloc(getGreenLedsNumber() * sizeof(uint8_t));
 }
 
 void gameSetup() {
@@ -97,8 +99,8 @@ void activateGameControls() {
 }
 
 GameState checkGameStatus() {
-    for (int j = 0; j < btnPressedCounter; j++) {
-        if (getPressedBtn()[j] != ledsOff[j]) {
+    for (int j = 0; j < buttonPressedCounter; j++) {
+        if (getPressedButton()[j] != ledsOff[j]) {
             return GAMEOVER;
         }    
     }
@@ -107,7 +109,7 @@ GameState checkGameStatus() {
 
 void levelPassed() {
     currentLevel++;
-    //note: is possible to change game difficulty runtime
+    //note: is possible to change game difficulty runtime by potentiometer
     levelInit(getDifficulty());
 }
 
