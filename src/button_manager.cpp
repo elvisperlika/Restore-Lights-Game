@@ -1,33 +1,35 @@
 #include "Arduino.h"
 #include "button_manager.h"
+#include "led_manager.h"
 #include <avr/sleep.h>
 
 #include <EnableInterrupt.h>
 
 #define DEBOUNCE_DELAY 100 // in ms
 const int8_t buttons[] = {BUTTON1, BUTTON2, BUTTON3, BUTTON4};
-uint32_t last_interrupt_time = 0;
+uint32_t lastInterruptTime = 0;
 uint8_t led_status = 0;
 // vector of order of the switched pins
 int8_t pressedBtn[4]; // !! rendilo dinamico con la malloc
+int8_t pressedButton;
 int8_t btnPressedCounter = 0;
 
 int8_t buttonPressedIndex;
 
 void buttonPressed1() {
-    buttonPressed(1);
+    buttonPressed(0);
 }
 
 void buttonPressed2() {
-    buttonPressed(2);
+    buttonPressed(1);
 }
 
 void buttonPressed3() {
-    buttonPressed(3);
+    buttonPressed(2);
 }
 
 void buttonPressed4() {
-    buttonPressed(4);
+    buttonPressed(3);
 }
 
 void buttonsInit() {
@@ -41,6 +43,7 @@ int getButtonsNumber() {
 }
 
 void activateButtonsGameInterrupt() {
+    pressedButton = -1;
     buttonPressedIndex = -1;
     enableInterrupt(BUTTON1, buttonPressed1, RISING);
     enableInterrupt(BUTTON2, buttonPressed2, RISING);
@@ -56,24 +59,24 @@ void deactivateButtonsGameInterrupt() {
 
 void buttonPressed(int8_t btnIndex) {    
     if (checkBouncing()) {
-        pressedBtn[btnPressedCounter] = btnIndex;
+        pressedButton = btnIndex;
         btnPressedCounter++;
     }
 }
 
+bool checkBouncing() {
+    unsigned long interruptTime = millis();
+    if (millis() - lastInterruptTime > DEBOUNCE_DELAY) {
+        return true;
+    }
+    lastInterruptTime = interruptTime;
+    return false;
+}
 
 int8_t* getPressedBtn() {
     return pressedBtn;
 }
 
-bool checkBouncing() {
-    unsigned long interrupt_time = millis();
-    if (interrupt_time - last_interrupt_time > DEBOUNCE_DELAY) {
-        return false;
-    }
-    last_interrupt_time = interrupt_time;
-    return true;
-}
 
 void sleepNow() {
     set_sleep_mode(SLEEP_MODE_PWR_DOWN);
@@ -92,3 +95,7 @@ void sleepNow() {
 }
 
 void wakeUpNow(){};
+
+int8_t getPressedButton() {
+    return pressedButton;
+}

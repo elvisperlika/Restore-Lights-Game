@@ -18,7 +18,7 @@ bool ledsOnFlag = false;
 int currentLedId = 0;
 
 /// Led's id turning off order ~~~~~~
-uint8_t ledsOff[] = {0, 0, 0, 0};
+uint8_t ledsOffOrdered[] = {0, 0, 0, 0};
 
 /// Defining time vaiables
 /// Time passed after pressing B1 and before turning all green leds on
@@ -84,12 +84,18 @@ bool checkLedsOn() {
 }
 
 void disableRandomLed() {
-    ledsOff[currentLedId] = switchRandomLedOff();
+    ledsOffOrdered[currentLedId] = switchRandomLedOff();
     currentLedId--;
 }
 
 bool checkPatternCreated() {
     // TO DO
+    if (currentLedId == -1)
+    {
+        return true;
+    }
+    return false;
+    
 }
 
 void activateGameControls() {
@@ -97,11 +103,9 @@ void activateGameControls() {
 }
 
 GameState checkGameStatus() {
-    for (int j = 0; j < btnPressedCounter; j++) {
-        if (getPressedBtn()[j] != ledsOff[j]) {
-            return GAMEOVER;
-        }    
-    }
+    Serial.print("PressedButton: ");
+    Serial.println(getPressedButton());
+    digitalWrite(getButtonsNumber(), HIGH);
     return PLAYER;
 }
 

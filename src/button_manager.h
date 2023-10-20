@@ -45,4 +45,9 @@ void wakeUpNow();
 */
 int8_t* getPressedBtn();
 
+/**
+ * Getter of the last pressed button.
+*/
+int8_t getPressedButton();
+
 #endif

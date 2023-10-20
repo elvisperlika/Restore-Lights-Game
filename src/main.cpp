@@ -22,6 +22,7 @@ void loop() {
     switch (gameState)
     {
     case SETUP:
+        Serial.println("Game setup");
         gameSetup();
         gameState = INITIALIZATION;
         break;
@@ -29,6 +30,7 @@ void loop() {
         basicTimer(SleepMode_TIME, &SleepMode_StartTime, sleepMode);
         initializationAllert();
         if (checkStartGame()) {
+            Serial.println("Game started");
             gameInit();
             T1_StartTime = millis();
             gameState = LEDS_ON;
@@ -46,6 +48,7 @@ void loop() {
     case LEDS_OFF:
         basicTimer(T2_TIME, &T2_StartTime, disableRandomLed);
         if (checkPatternCreated()) {
+            Serial.println("Pattern created");
             activateGameControls();
             T3_StartTime = millis();            
             gameState = PLAYER;
