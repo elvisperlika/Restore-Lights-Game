@@ -7,6 +7,7 @@ const uint8_t greenLeds[] = {GREEN_LED1, GREEN_LED2, GREEN_LED3, GREEN_LED4};
 /// Variables to manage ledFading
 int fadeAmount = 5;
 int currIntensity = 0;
+static unsigned long lastFadeCallTime;
 
 uint8_t getGreenLedsNumber() {
     return sizeof(greenLeds) / sizeof(greenLeds[0]);
@@ -30,8 +31,9 @@ void ledsInit() {
     {
         pinMode(greenLeds[i], OUTPUT);
     }
-    pinMode(RED_LED, OUTPUT);
+    //pinMode(RED_LED, OUTPUT);
     currIntensity = 0;
+    lastFadeCallTime = millis();
 }
 
 void switchGreenLeds(bool state) {
@@ -49,12 +51,16 @@ void switchLedByIndex(uint8_t ledIndex, bool state) {
 }
 
 void ledFading(uint8_t ledPin) {
-    analogWrite(ledPin, currIntensity);
-    currIntensity += fadeAmount;
+    if (millis() - lastFadeCallTime >= FADE_DELAY) {
+        analogWrite(ledPin, currIntensity);
+        currIntensity += fadeAmount;
 
-    if (currIntensity <= 0 || currIntensity >= 255) {
-        fadeAmount = -fadeAmount;
-    }
+        if (currIntensity <= 0 || currIntensity >= 255) {
+            fadeAmount = -fadeAmount;
+        }
+        
+        lastFadeCallTime = millis();
+    }    
 }
 
 uint8_t switchRandomLedOff() {

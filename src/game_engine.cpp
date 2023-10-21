@@ -14,15 +14,15 @@ static int currentLevel;
 static int bestScore;
 
 /// TO DOCUMENT (flags 🤢)
-bool ledsOnFlag = false;
+static bool ledsOnFlag = false;
 
 /// Array containing the order of the leds switched off
-uint8_t* ledsOffOrdered;
-int currentLedId;
+static uint8_t* ledsOffOrdered;
+static int currentLedId;
 
 /// Defining time vaiables
 /// Time passed after pressing B1 and before turning all green leds on
-unsigned long T1_TIME;
+const unsigned long T1_TIME = INITIAL_T1;
 unsigned long T1_StartTime; 
 
 /// Initial leds turning off time and the session related variable
@@ -33,10 +33,10 @@ unsigned long T2_StartTime;
 unsigned long T3_TIME;
 unsigned long T3_StartTime;
 
-unsigned long ResetGame_TIME = RESET_GAME_TIME;
+unsigned long ResetGame_TIME;
 unsigned long ResetGame_StartTime;
 
-unsigned long SleepMode_TIME = SLEEP_MODE_TIME;
+unsigned long SleepMode_TIME;
 unsigned long SleepMode_StartTime;
 
 void boardInit() {
@@ -50,6 +50,7 @@ void boardInit() {
 void gameSetup() {
     Serial.println("Welcome to the Restore the Light Game. Press Key B1 to Start");
     SleepMode_StartTime = millis();
+    activateButtonsGameInterrupt();
 }
 
 void initializationAllert() {
@@ -57,21 +58,23 @@ void initializationAllert() {
 }
 
 bool checkStartGame() {
-    return digitalRead(BUTTON1) == HIGH ? true : false;
+    int8_t var = getLastButtonPressedIndex();
+    return var == 0 ? true : false;
 }
 
 void levelInit(uint8_t difficulty) {
-    T1_TIME = INITIAL_T1;
     T2_TIME = CalculateNewT(INITIAL_T2, DECREASE_RATES[difficulty], currentLevel);
     T3_TIME = CalculateNewT(INITIAL_T3, DECREASE_RATES[difficulty], currentLevel);
     currentLedId = getGreenLedsNumber() - 1;
 }
 
 void gameInit() {
-    switchLed(RED_LED, false);
+    ResetGame_TIME = RESET_GAME_TIME;
+    SleepMode_TIME = SLEEP_MODE_TIME;    
     currentLevel = 0;
     bestScore = 0;
-    levelInit(getDifficulty());
+    switchLed(RED_LED, false);
+    levelInit(getDifficulty());    
 }
 
 void ledsOn(bool s) {
@@ -101,10 +104,6 @@ bool checkPatternCreated() {
 
 void activateGameControls() {
     activateButtonsGameInterrupt();
-
-    for (int i=0; i<getButtonsNumber(); i++) {
-        Serial.print(ledsOffOrdered[i]);
-    }
 }
 
 GameState checkGameStatus() {
@@ -132,7 +131,8 @@ void levelPassed() {
 void showGameScore() {
     switchGreenLeds(false);
 
-    Serial.print("Game Over. Final Score: ");
+    Serial.println("Game Over.");
+    Serial.print("Final Score: ");
     Serial.println(currentLevel);
 
     if (currentLevel > bestScore) {
@@ -154,5 +154,6 @@ void sleepMode() {
     Serial.println("Sleep mode actived");
     delay(100);
     switchLed(RED_LED, false);
+    deactivateButtonsGameInterrupt();
     sleepNow();
 }

@@ -41,6 +41,7 @@ void buttonsInit() {
         pinMode(buttons[i], INPUT);
     }
 
+    lastButtonPressedIndex = -1;
     lastInterruptTime = (unsigned long*)calloc(getButtonsNumber(), sizeof(unsigned long));
 }
 
@@ -92,13 +93,14 @@ void sleepNow() {
     
     for (int i = 0; i < getButtonsNumber(); i++) {
         enableInterrupt(buttons[i], wakeUpNow, RISING);
-    }    
+    }
     
     sleep_mode();
     sleep_disable();    
 
     for (int i = 0; i < getButtonsNumber(); i++) {
         disableInterrupt(buttons[i]);
+        lastInterruptTime[i] = millis();
     }
 }
 

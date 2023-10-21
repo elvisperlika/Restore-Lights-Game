@@ -10,6 +10,9 @@
 /// Define red led pin (must be a PWM pin)
 #define RED_LED 6
 
+/// Millisecs of delay every fade's function call must have
+#define FADE_DELAY 20
+
 extern const uint8_t greenLeds[];
 
 /// @brief Getter of the total number of green leds.

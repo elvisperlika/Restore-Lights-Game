@@ -3,14 +3,14 @@
 
 #include <stdint.h>
 
-#define INITIAL_T1 1000UL
+#define INITIAL_T1 1500UL
 #define INITIAL_T2 1000UL
 #define INITIAL_T3 10000UL
 
 #define RESET_GAME_TIME 10000UL
 #define SLEEP_MODE_TIME 10000UL
 
-extern unsigned long T1_TIME;
+extern const unsigned long T1_TIME;
 extern unsigned long T1_StartTime; 
 
 /// Initial leds turning off time and the session related variable
