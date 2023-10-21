@@ -20,6 +20,12 @@ void setGameOver() {
     gameState = GAMESCORE;
 }
 
+/// @brief Enter deep sleep mode, and then return to SETUP state. (needed to reactivate button interrupts)
+void setSleepMode() {
+    sleepMode();
+    gameState = SETUP;
+}
+
 void loop() {
     switch (gameState)
     {
@@ -29,34 +35,28 @@ void loop() {
             gameState = INITIALIZATION;
             break;
         case INITIALIZATION:
-            basicTimer(SleepMode_TIME, &SleepMode_StartTime, sleepMode);
+            basicTimer(SleepMode_TIME, &SleepMode_StartTime, setSleepMode);
             initializationAllert();
             if (checkStartGame()) {
                 gameInit();
-                Serial.println("GO!");
                 T1_StartTime = millis();
                 gameState = LEDS_ON;
             }
-
             break;
         case LEDS_ON:
-            Serial.println("asdf");
             basicTimer(T1_TIME, &T1_StartTime, ledsOn, true);
             if (checkLedsOn()) {
                 T2_StartTime = millis();
                 gameState = LEDS_OFF;
             }
-
             break;
         case LEDS_OFF:
-            Serial.println("asdfpt2");
             basicTimer(T2_TIME, &T2_StartTime, disableRandomLed);
             if (checkPatternCreated()) {
                 activateGameControls();
                 T3_StartTime = millis();
                 gameState = PLAYER;
             }
-
             break;
         case PLAYER:
             gameState = checkGameStatus();

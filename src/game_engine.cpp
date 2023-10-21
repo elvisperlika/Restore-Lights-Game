@@ -5,6 +5,7 @@
 #include "led_manager.h"
 #include "potenziometer_manager.h"
 #include "time_utility.h"
+#include "lcd_screen_manager.h"
 
 /// Array of each decrease rate for each difficulty.
 const float DECREASE_RATES[] = {0.05, 0.07, 0.09, 0.11};
@@ -33,22 +34,28 @@ unsigned long T2_StartTime;
 unsigned long T3_TIME;
 unsigned long T3_StartTime;
 
-unsigned long ResetGame_TIME;
+unsigned long ResetGame_TIME = RESET_GAME_TIME;
 unsigned long ResetGame_StartTime;
 
-unsigned long SleepMode_TIME;
+unsigned long SleepMode_TIME = SLEEP_MODE_TIME;
 unsigned long SleepMode_StartTime;
 
 void boardInit() {
     ledsInit();
     buttonsInit();
     potentiometerInit();
+    initLCD();
 
     ledsOffOrdered = (uint8_t*)calloc(getGreenLedsNumber(), sizeof(uint8_t));
 }
 
 void gameSetup() {
-    Serial.println("Welcome to the Restore the Light Game. Press Key B1 to Start");
+    const char *setupMessage = "Welcome to the Restore the Light Game. Press Key B1 to Start";
+    Serial.println(setupMessage);
+    clearLCD();
+    changeCursorLCD(0,0);
+    printLCD(setupMessage);
+
     SleepMode_StartTime = millis();
     activateButtonsGameInterrupt();
 }
@@ -58,8 +65,7 @@ void initializationAllert() {
 }
 
 bool checkStartGame() {
-    int8_t var = getLastButtonPressedIndex();
-    return var == 0 ? true : false;
+    return getLastButtonPressedIndex() == 0 ? true : false;
 }
 
 void levelInit(uint8_t difficulty) {
@@ -74,7 +80,13 @@ void gameInit() {
     currentLevel = 0;
     bestScore = 0;
     switchLed(RED_LED, false);
-    levelInit(getDifficulty());    
+    levelInit(getDifficulty());
+    
+    const char *goMessage = "GO!";
+    Serial.println(goMessage);
+    clearLCD();
+    changeCursorLCD(0,0);
+    printLCD(goMessage);
 }
 
 void ledsOn(bool s) {
@@ -126,18 +138,41 @@ void levelPassed() {
     currentLevel++;
     //note: is possible to change game difficulty runtime by potentiometer
     levelInit(getDifficulty());
+
+    const char *levelPassedMessage = "Level passed!";
+    const char *newLevelMessage = "New level -> ";
+    clearLCD();
+    changeCursorLCD(0,0);
+    printLCD(levelPassedMessage);
+    
+    changeCursorLCD(1,0);
+    printLCD(newLevelMessage);
+    printLCD(currentLevel);
 }
 
 void showGameScore() {
     switchGreenLeds(false);
 
-    Serial.println("Game Over.");
-    Serial.print("Final Score: ");
+    const char *gameOverMessage = "Game Over.";
+    const char *finalScoreMessage = "Final Score: ";
+    
+    Serial.println(gameOverMessage);
+    Serial.print(finalScoreMessage);
     Serial.println(currentLevel);
+    clearLCD();
+    changeCursorLCD(0,0);
+    printLCD(gameOverMessage);
+    changeCursorLCD(1,0);
+    printLCD(finalScoreMessage);
+    printLCD(currentLevel);
 
     if (currentLevel > bestScore) {
         bestScore = currentLevel;
-        Serial.println("NEW BEST SCORE!");
+
+        const char *bestScoreMessage = "NEW BEST SCORE";
+        Serial.println(bestScoreMessage);
+        changeCursorLCD(2,0);
+        printLCD(bestScoreMessage);
     }
 }
 
@@ -151,7 +186,11 @@ void deactivateGameControls() {
 }
 
 void sleepMode() {
-    Serial.println("Sleep mode actived");
+    const char *sleepModeMessage = "Sleep mode actived";
+    Serial.println(sleepModeMessage);
+    clearLCD();
+    changeCursorLCD(0,0);
+    printLCD(sleepModeMessage);
     delay(100);
     switchLed(RED_LED, false);
     deactivateButtonsGameInterrupt();
