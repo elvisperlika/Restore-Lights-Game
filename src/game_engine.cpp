@@ -50,7 +50,7 @@ void boardInit() {
 }
 
 void gameSetup() {
-    const char *setupMessage = "Welcome to the Restore the Light Game. Press Key B1 to Start";
+    const char *setupMessage = "Welcome to the Restore the Light Game. Press Key B1 to Start\0";
     Serial.println(setupMessage);
     clearLCD();
     changeCursorLCD(0,0);
@@ -82,7 +82,7 @@ void gameInit() {
     switchLed(RED_LED, false);
     levelInit(getDifficulty());
     
-    const char *goMessage = "GO!";
+    const char *goMessage = "GO!\0";
     Serial.println(goMessage);
     clearLCD();
     changeCursorLCD(0,0);
@@ -139,8 +139,8 @@ void levelPassed() {
     //note: is possible to change game difficulty runtime by potentiometer
     levelInit(getDifficulty());
 
-    const char *levelPassedMessage = "Level passed!";
-    const char *newLevelMessage = "New level -> ";
+    const char *levelPassedMessage = "Level passed!\0";
+    const char *newLevelMessage = "New level -> \0";
     clearLCD();
     changeCursorLCD(0,0);
     printLCD(levelPassedMessage);
@@ -153,8 +153,8 @@ void levelPassed() {
 void showGameScore() {
     switchGreenLeds(false);
 
-    const char *gameOverMessage = "Game Over.";
-    const char *finalScoreMessage = "Final Score: ";
+    const char *gameOverMessage = "Game Over.\0";
+    const char *finalScoreMessage = "Final Score: \0";
     
     Serial.println(gameOverMessage);
     Serial.print(finalScoreMessage);
@@ -169,7 +169,7 @@ void showGameScore() {
     if (currentLevel > bestScore) {
         bestScore = currentLevel;
 
-        const char *bestScoreMessage = "NEW BEST SCORE";
+        const char *bestScoreMessage = "NEW BEST SCORE!\0";
         Serial.println(bestScoreMessage);
         changeCursorLCD(2,0);
         printLCD(bestScoreMessage);
@@ -186,7 +186,7 @@ void deactivateGameControls() {
 }
 
 void sleepMode() {
-    const char *sleepModeMessage = "Sleep mode actived";
+    const char *sleepModeMessage = "Sleep mode activated\0";
     Serial.println(sleepModeMessage);
     clearLCD();
     changeCursorLCD(0,0);
