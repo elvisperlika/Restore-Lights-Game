@@ -5,7 +5,6 @@
 #include "led_manager.h"
 #include "potenziometer_manager.h"
 #include "time_utility.h"
-#include "time.h"
 
 /// Array of each decrease rate for each difficulty.
 const float DECREASE_RATES[] = {0.05, 0.07, 0.09, 0.11};
@@ -44,7 +43,6 @@ void boardInit() {
     ledsInit();
     buttonsInit();
     potentiometerInit();
-    srand(time(NULL));
     ResetGame_TIME = RESET_GAME_TIME;
     SleepMode_TIME = SLEEP_MODE_TIME;
     ledsOffOrdered = (uint8_t*)calloc(getGreenLedsNumber(), sizeof(uint8_t));
@@ -53,7 +51,6 @@ void boardInit() {
 void gameSetup() {
     Serial.println("Welcome to the Restore the Light Game. Press Key B1 to Start");
     SleepMode_StartTime = millis();
-
     activateButtonsGameInterrupt();
 }
 
@@ -70,6 +67,7 @@ void levelInit(uint8_t difficulty) {
     T2_TIME = CalculateNewT(INITIAL_T2, DECREASE_RATES[difficulty], currentLevel);
     T3_TIME = CalculateNewT(INITIAL_T3, DECREASE_RATES[difficulty], currentLevel);
     currentLedId = getGreenLedsNumber() - 1;
+    srand(millis());
 }
 
 void gameInit() {
