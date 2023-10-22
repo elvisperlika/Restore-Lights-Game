@@ -64,10 +64,10 @@ void ledFading(uint8_t ledPin) {
 }
 
 uint8_t switchRandomLedOff() {
-    uint8_t rand = random(getGreenLedsNumber());
-    while (digitalRead(greenLeds[rand]) == LOW) {
-        rand = random(getGreenLedsNumber());
+    uint8_t r = rand() % getGreenLedsNumber();
+    while (digitalRead(greenLeds[r]) == LOW) {
+        r = rand() % getGreenLedsNumber();
     }
-    digitalWrite(greenLeds[rand], LOW);
-    return rand;
+    digitalWrite(greenLeds[r], LOW);
+    return r;
 }
