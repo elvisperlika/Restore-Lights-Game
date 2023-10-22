@@ -43,13 +43,15 @@ void boardInit() {
     ledsInit();
     buttonsInit();
     potentiometerInit();
-
+    ResetGame_TIME = RESET_GAME_TIME;
+    SleepMode_TIME = SLEEP_MODE_TIME;
     ledsOffOrdered = (uint8_t*)calloc(getGreenLedsNumber(), sizeof(uint8_t));
 }
 
 void gameSetup() {
     Serial.println("Welcome to the Restore the Light Game. Press Key B1 to Start");
     SleepMode_StartTime = millis();
+
     activateButtonsGameInterrupt();
 }
 
@@ -74,7 +76,9 @@ void gameInit() {
     currentLevel = 0;
     bestScore = 0;
     switchLed(RED_LED, false);
-    levelInit(getDifficulty());    
+    levelInit(getDifficulty());
+    
+    Serial.println("GO!"); 
 }
 
 void ledsOn(bool s) {
@@ -124,6 +128,9 @@ GameState checkGameStatus() {
 
 void levelPassed() {
     currentLevel++;
+    Serial.println("Newpoint!");
+    Serial.print("Score: ");
+    Serial.println(currentLevel);
     //note: is possible to change game difficulty runtime by potentiometer
     levelInit(getDifficulty());
 }
@@ -143,7 +150,7 @@ void showGameScore() {
 
 void showGameOverAllert() {
     switchGreenLeds(false);
-    ledFading(RED_LED);
+    switchLed(RED_LED, true);
 }
 
 void deactivateGameControls() {
@@ -151,8 +158,6 @@ void deactivateGameControls() {
 }
 
 void sleepMode() {
-    Serial.println("Sleep mode actived");
-    delay(100);
     switchLed(RED_LED, false);
     deactivateButtonsGameInterrupt();
     sleepNow();

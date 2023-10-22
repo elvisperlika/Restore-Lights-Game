@@ -5,7 +5,7 @@
 
 #include <EnableInterrupt.h>
 
-#define DEBOUNCE_DELAY 1500 // in ms
+#define BUTTON_DELAY 1000 // in ms
 
 /// Array of millisecs to keep track of the last interrupt call on each button
 unsigned long* lastInterruptTime;
@@ -78,7 +78,7 @@ int8_t getLastButtonPressedIndex() {
 bool checkBouncing(uint8_t buttonIndex) {
     unsigned long interruptTime = millis();
 
-    if (interruptTime - lastInterruptTime[buttonIndex] < DEBOUNCE_DELAY) {
+    if (interruptTime - lastInterruptTime[buttonIndex] < BUTTON_DELAY) {
         return false;
     }
 
@@ -102,6 +102,7 @@ void sleepNow() {
         disableInterrupt(buttons[i]);
         lastInterruptTime[i] = millis();
     }
+    activateButtonsGameInterrupt();
 }
 
 void wakeUpNow(){};

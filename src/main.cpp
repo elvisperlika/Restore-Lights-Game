@@ -5,8 +5,8 @@
 GameState gameState = SETUP;
 
 void setup() {
-    boardInit();
     Serial.begin(9600);
+    boardInit();
 }
 
 /// @brief Restart from SETUP state.
@@ -18,6 +18,12 @@ void resetGame() {
 void setGameOver() {
     deactivateGameControls();
     gameState = GAMESCORE;
+}
+
+/// @brief Enter deep sleep mode, and then return to SETUP state. (needed to reactivate button interrupts)
+void setSleepMode() {
+    sleepMode();
+    gameState = SETUP;
 }
 
 void loop() {
@@ -33,14 +39,12 @@ void loop() {
             initializationAllert();
             if (checkStartGame()) {
                 gameInit();
-                Serial.println("GO!");
                 T1_StartTime = millis();
                 gameState = LEDS_ON;
             }
 
             break;
         case LEDS_ON:
-            Serial.println("asdf");
             basicTimer(T1_TIME, &T1_StartTime, ledsOn, true);
             if (checkLedsOn()) {
                 T2_StartTime = millis();
@@ -49,7 +53,6 @@ void loop() {
 
             break;
         case LEDS_OFF:
-            Serial.println("asdfpt2");
             basicTimer(T2_TIME, &T2_StartTime, disableRandomLed);
             if (checkPatternCreated()) {
                 activateGameControls();
@@ -70,11 +73,13 @@ void loop() {
         case GAMESCORE:
             showGameScore();
             ResetGame_StartTime = millis();
+            //note: here the red light should light up just for one second,
+            //but since there would be 10sec of nothing we decided to keep the light on.
+            showGameOverAllert();
             gameState = GAMEOVER;
             break;
         case GAMEOVER:
-            basicTimer(ResetGame_TIME, &ResetGame_StartTime, resetGame);
-            showGameOverAllert();
+            basicTimer(ResetGame_TIME, &ResetGame_StartTime, resetGame);            
             break;
         default:
             break;
