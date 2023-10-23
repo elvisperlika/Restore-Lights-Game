@@ -2,28 +2,15 @@
 #include "led_manager.h"
 
 /// Array of green led's pins
-const uint8_t greenLeds[] = {GREEN_LED1, GREEN_LED2, GREEN_LED3, GREEN_LED4};
+static const uint8_t greenLeds[] = {GREEN_LED1, GREEN_LED2, GREEN_LED3, GREEN_LED4};
 
-/// Variables to manage ledFading
-int fadeAmount = 5;
-int currIntensity = 0;
+/// Variables needed to manage ledFading.
+static int fadeAmount = 5;
+static int currIntensity = 0;
 static unsigned long lastFadeCallTime;
 
 uint8_t getGreenLedsNumber() {
     return sizeof(greenLeds) / sizeof(greenLeds[0]);
-}
-
-uint8_t getGreenLedsOnNumber() {
-    uint8_t counter = 0;
-
-    for (int i = 0; i < getGreenLedsNumber(); i++)
-    {
-        if (digitalRead(greenLeds[i]) == HIGH) {
-            counter++;
-        }
-    }
-
-    return counter;
 }
 
 void ledsInit() {
@@ -31,7 +18,7 @@ void ledsInit() {
     {
         pinMode(greenLeds[i], OUTPUT);
     }
-    //pinMode(RED_LED, OUTPUT);
+
     currIntensity = 0;
     lastFadeCallTime = millis();
 }
@@ -48,6 +35,15 @@ void switchLed(uint8_t ledPin, bool state) {
 
 void switchLedByIndex(uint8_t ledIndex, bool state) {
     switchLed(greenLeds[ledIndex], state);
+}
+
+bool checkLedsOn() {
+    for (int i = 0; i < getGreenLedsNumber(); i++) {
+        if (digitalRead(greenLeds[i]) == LOW) {
+            return false;
+        }
+    }
+    return true;
 }
 
 void ledFading(uint8_t ledPin) {

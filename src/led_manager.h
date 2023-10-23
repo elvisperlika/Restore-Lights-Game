@@ -7,27 +7,21 @@
 #define GREEN_LED3 4
 #define GREEN_LED4 5
 
-/// Define red led pin (must be a PWM pin)
+/// Define red led pin (must be a PWM pin).
 #define RED_LED 6
 
-/// Millisecs of delay every fade's function call must have
+/// Millisecs of delay every fade's function call must have.
 #define FADE_DELAY 20
-
-extern const uint8_t greenLeds[];
 
 /// @brief Getter of the total number of green leds.
 /// @return the number of green leds.
 uint8_t getGreenLedsNumber();
 
-/// @brief Getter of the total number of green leds turned on.
-/// @return the number of green leds turned on.
-uint8_t getGreenLedsOnNumber();
-
 /// @brief Initialize green and red led's pins on OUTPUT.
 void ledsInit();
 
 /// @brief Switch all the leds on or off.
-/// @param state: true to switch on, false to switch off.
+/// @param state: true to switch leds on, false to switch leds off.
 void switchGreenLeds(bool state);
 
 /// @brief Switch on or off a single led.
@@ -39,6 +33,10 @@ void switchLed(uint8_t ledPin, bool state);
 /// @param ledIndex Index of the led to switch.
 /// @param state true to switch on, false to switch off.
 void switchLedByIndex(uint8_t ledIndex, bool state);
+
+/// @brief Check if all the leds are switched on.
+/// @return true if all the leds are switched on, false otherwise.
+bool checkLedsOn();
 
 /// @brief If the fading is activated the led will fade in and out else the led will be switched off.
 /// @param ledPin pin of the led to switch on or off.

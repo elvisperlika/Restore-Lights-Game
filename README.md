@@ -6,6 +6,8 @@
 ## Digital Arduino 
 -- insert images here --
 
+# [Link to the youtube video (italian)](https://www.youtube.com/watch?v=wqvdZkme41E)
+
 ## TO DO LIST
 Gieck
 - gestione di T2 e T3

@@ -10,33 +10,37 @@
 #define RESET_GAME_TIME 10000UL
 #define SLEEP_MODE_TIME 10000UL
 
+/// Defining time vaiables:
+/// Time passed after pressing B1 and before turning all green leds on.
 extern const unsigned long T1_TIME;
 extern unsigned long T1_StartTime; 
 
-/// Initial leds turning off time and the session related variable
+/// Initial leds turning off time and the session related variable.
 extern unsigned long T2_TIME;
 extern unsigned long T2_StartTime;
 
-/// Initial time Player have to finish the level on easiest difficulty, and the serrion related variable
+/// Initial time Player have to finish the level on easiest difficulty, and the serrion related variable.
 extern unsigned long T3_TIME;
 extern unsigned long T3_StartTime;
 
+/// Time passed between the end of the game and the start of a new one.
 extern unsigned long ResetGame_TIME;
 extern unsigned long ResetGame_StartTime;
 
+/// Time passed before entering in Sleep Mode.
 extern unsigned long SleepMode_TIME;
 extern unsigned long SleepMode_StartTime;
 
 /**
- * Game states.
+ * All possible game states.
  * SETUP: executed only one time at the beginning of every new game to reset variables
- * INITIALIZATION: waiting phase: 10s -> sleep mode or/and interrupt -> start game
- * LEDS_ON: turning on of all leds and waiting 
- * LEDS_OFF: randomly switch off of every led
+ * INITIALIZATION: waiting phase: 10s -> sleep mode or interrupt -> start game.
+ * LEDS_ON: turning on of all leds and waiting T1 time.
+ * LEDS_OFF: randomly switch off a led every T2 time.
  * PLAYER: Player have to switch on leds in T3 time in the opposite order of swithcing off.
- * NEW_LEVEL: Player win the level and start a new one whit less time to play.
+ * NEW_LEVEL: Player win the level and start a new one with less time to play.
  * GAMESCORE: Show the final score of the current game.
- * GAMEOVER: Player lose the game and the system show the score.
+ * GAMEOVER: Player wait to restart the game.
 */
 enum GameState {
     SETUP,
@@ -49,9 +53,7 @@ enum GameState {
     GAMEOVER
 };
 
-/**
- * Initialize all pins connected.
-*/
+/// @brief Initialize board connected.
 void boardInit();
 
 /**
@@ -87,7 +89,7 @@ void ledsOn(bool s);
 /**
  * Check if all green leds are turned on.
 */
-bool checkLedsOn();
+bool checkLightsOn();
 
 /**
  * Turn off a random led.
