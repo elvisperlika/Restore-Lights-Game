@@ -5,7 +5,7 @@
 
 #include <EnableInterrupt.h>
 
-#define BUTTON_DELAY 1000 // in ms
+#define BUTTON_DELAY 200 // in ms
 
 /// Array of millisecs to keep track of the last interrupt call on each button
 unsigned long* lastInterruptTime;

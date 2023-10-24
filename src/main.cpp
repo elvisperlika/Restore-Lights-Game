@@ -4,27 +4,19 @@
 
 static GameState gameState = SETUP;
 
-void setup() {
-    Serial.begin(9600);
-    boardInit();
-}
-
 /// @brief Restart from SETUP state (called by a timer function).
-void resetGame() {
-    gameState = SETUP;
-}
+void resetGame();
 
 /// @brief Deactivate game controls, then enter GAMESCORE state (called by a timer function).
-void setGameOver() {
-    deactivateGameControls();
-    gameState = GAMESCORE;
-}
+void setGameOver();
 
 /// @brief Enter deep sleep mode, and then return to SETUP state, needed to 
 //reactivate button interrupts (called by a timer function).
-void setSleepMode() {
-    sleepMode();
-    gameState = SETUP;
+void setSleepMode();
+
+void setup() {
+    Serial.begin(9600);
+    boardInit();
 }
 
 void loop() {
@@ -82,4 +74,19 @@ void loop() {
         default:
             break;
     }
+}
+
+
+void resetGame() {
+    gameState = SETUP;
+}
+
+void setGameOver() {
+    deactivateGameControls();
+    gameState = GAMESCORE;
+}
+
+void setSleepMode() {
+    sleepMode();
+    gameState = SETUP;
 }
