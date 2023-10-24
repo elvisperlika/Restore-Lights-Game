@@ -53,87 +53,58 @@ enum GameState {
     GAMEOVER
 };
 
-/// @brief Initialize board connected.
+/// @brief Initialize board components.
 void boardInit();
 
-/**
- * Show the Welcome message.
-*/
+/// @brief Initialize the game (game one time events).
 void gameSetup();
 
-/**
- * Show Initialization Game led allert. 
-*/
+/// @brief Show Initialization Game allert.
 void initializationAllert();
 
-/**
- * Check if the player pushed the B1 button.
-*/
+/// @brief Check if the game have to start (player pushed the B1 button).
 bool checkStartGame();
 
-/**
- * Initialize level variables.
-*/
-void levelInit(uint8_t difficulty);
+/// @brief Initialize level variables (called every level change).
+void levelInit();
 
-/**
- * Initialize the game settings.
-*/
-void gameInit();
-
-/**
- * Switch the green leds on.
-*/
+/// @brief Switch the green leds on.
+/// @param s true if switching the leds on, false if switching off.
 void ledsOn(bool s);
 
-/**
- * Check if all green leds are turned on.
-*/
+/// @brief Check if all green leds are turned on.
+/// @return true if all leds are on, false otherwise.
 bool checkLightsOn();
 
-/**
- * Turn off a random led.
-*/
+/// @brief Turn off a random led.
 void disableRandomLed();
 
-/**
- * Check if the pattern was created.
- * @return true if all leds are switched off. 
-*/
+/// @brief Check if the pattern was created.
+/// @return true if all leds are switched off.
 bool checkPatternCreated();
 
-/**
- * Enable game's controls.
-*/
+/// @brief Enable game's controls.
 void activateGameControls();
-/**
- * Check if the player lose the game.
- * @return NEW_LEVEL if the player pressed the button
- *      in the correct order or GAMESCORE if the player push the wrong button. 
-*/
+
+/// @brief Check if the player lost the game.
+/// @return NEW_LEVEL if the player pressed all buttons in the correct order; 
+///         GAMESCORE if the player pushed a wrong button;
+///         PLAYER otherwise. 
 GameState checkGameStatus();
 
-/// @brief Initialize the new level, after completing the previous
+/// @brief Initialize a new level.
 void levelPassed();
 
-/**
- * Show in Serial the new score and the best score.
-*/
+/// @brief Show in Serial the player's score.
 void showGameScore();
 
-/**
- * Show Game Over led allert.
-*/
+/// @brief Show Game Over led allert.
 void showGameOverAllert();
 
-/**
- * Disable game's controls.
-*/
+/// @brief Disable game's controls.
 void deactivateGameControls();
 
-/**
- * Set Arduino in Deep Sleep Mode.
-*/
+/// @brief Set Arduino in Deep Sleep Mode.
 void sleepMode();
 
 #endif

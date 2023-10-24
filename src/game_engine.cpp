@@ -45,6 +45,10 @@ void gameSetup() {
     Serial.println("Welcome to the Restore the Light Game. Press Key B1 to Start");
     SleepMode_StartTime = millis();
     activateButtonsGameInterrupt();
+    ResetGame_TIME = RESET_GAME_TIME;
+    SleepMode_TIME = SLEEP_MODE_TIME;    
+    currentLevel = 0;
+    bestScore = 0;
 }
 
 void initializationAllert() {
@@ -52,31 +56,21 @@ void initializationAllert() {
 }
 
 bool checkStartGame() {
-    int8_t var = getLastButtonPressedIndex();
-    return var == 0 ? true : false;
+    return getLastButtonPressedIndex() == 0 ? true : false;
 }
 
-void levelInit(uint8_t difficulty) {
+void levelInit() {
+    uint8_t difficulty = getDifficulty();
+    switchLed(RED_LED, false);
     T2_TIME = CalculateNewT(INITIAL_T2, DECREASE_RATES[difficulty], currentLevel);
     T3_TIME = CalculateNewT(INITIAL_T3, DECREASE_RATES[difficulty], currentLevel);
     currentLedId = getGreenLedsNumber() - 1;
-    srand(millis());
-}
-
-void gameInit() {
-    ResetGame_TIME = RESET_GAME_TIME;
-    SleepMode_TIME = SLEEP_MODE_TIME;    
-    currentLevel = 0;
-    bestScore = 0;
-    switchLed(RED_LED, false);
-    levelInit(getDifficulty());
-    
+    srand(millis());   
     Serial.println("GO!"); 
 }
 
 void ledsOn(bool s) {
     switchGreenLeds(s);
-    ledsOnFlag = true;
 }
 
 bool checkLightsOn() {
@@ -84,7 +78,6 @@ bool checkLightsOn() {
 }
 
 void disableRandomLed() {
-
     ledsOffOrdered[currentLedId] = switchRandomLedOff();
     currentLedId--;
 }
@@ -124,7 +117,7 @@ void levelPassed() {
     Serial.print("Score: ");
     Serial.println(currentLevel);
     //note: is possible to change game difficulty runtime by potentiometer
-    levelInit(getDifficulty());
+    levelInit();
 }
 
 void showGameScore() {

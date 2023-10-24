@@ -39,7 +39,7 @@ void loop() {
             basicTimer(SleepMode_TIME, &SleepMode_StartTime, sleepMode);
             initializationAllert();
             if (checkStartGame()) {
-                gameInit();
+                levelInit();
                 T1_StartTime = millis();
                 gameState = LEDS_ON;
             }
