@@ -1,4 +1,4 @@
-# assignment_1
+# Restore-Lights-Game
 ## Setup
 1. Install PlatformIO IDE in VSCode
 2. Connect the arduino
